@@ -20,19 +20,25 @@ N8N_WEBHOOK_URL = (
 )
 
 # ======================================================
-# GLOBAL THEME (DARK / PREMIUM)
 # ======================================================
 st.markdown(
     """
     <style>
     body {
-        background-color: #0b0f16;
-        color: #e5e7eb;
+        background-color: #000000;
+        color: #ffffff;
     }
 
     .storm-header {
         text-align: center;
         margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-bottom: 1rem;
     }
 
@@ -41,35 +47,67 @@ st.markdown(
         font-weight: 800;
         letter-spacing: 0.04em;
         margin-top: 0.5rem;
+        color: #ffffff;
     }
 
     .storm-subtitle {
         font-size: 1.05rem;
-        opacity: 0.8;
+        color: rgba(255,255,255,0.85);
     }
 
     .divider {
-        border-top: 1px solid rgba(255,255,255,0.08);
+        border-top: 2px solid #CDFF00;
         margin: 1.5rem 0;
     }
 
     .stChatMessage.user div {
-        background: #111827;
+        background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        border: 1px solid #333333;
         border-radius: 12px;
         padding: 12px 16px;
+        color: #ffffff;
     }
 
     .stChatMessage.assistant div {
-        background: #020617;
-        border-left: 3px solid #22c55e;
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        border-left: 4px solid #CDFF00;
         border-radius: 12px;
         padding: 14px 16px;
+        color: #ffffff;
+    }
+
+    .stButton button {
+        background-color: #CDFF00;
+        color: #000000;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .stButton button:hover {
+        background-color: #b8e600;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(205, 255, 0, 0.3);
+    }
+
+    .stChatInput input {
+        background-color: #1a1a1a;
+        color: #ffffff;
+        border: 1px solid #333333;
+        border-radius: 8px;
+    }
+
+    .stChatInput input:focus {
+        border-color: #CDFF00;
+        box-shadow: 0 0 0 1px #CDFF00;
     }
 
     .footer {
         text-align: center;
         font-size: 0.75rem;
-        opacity: 0.55;
+        color: rgba(255,255,255,0.6);
         margin-top: 2rem;
     }
     </style>
@@ -78,11 +116,14 @@ st.markdown(
 )
 
 # ======================================================
-# HEADER + LOGO (LOCAL PATH)
 # ======================================================
 with st.container():
     st.markdown('<div class="storm-header">', unsafe_allow_html=True)
-    st.image("assets/logo(1).jpeg", width=130)
+    
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.image("/images/logo-281-29.jpeg", width=180)
+    
     st.markdown(
         """
         <div class="storm-title">Storm</div>
@@ -96,6 +137,7 @@ with st.container():
 
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
+
 # ======================================================
 # SESSION STATE (CHAT MEMORY)
 # ======================================================
@@ -104,10 +146,10 @@ if "messages" not in st.session_state:
         {
             "role": "assistant",
             "content": (
-                "I’m **Storm**, the Wolves of Real Estate AI.\n\n"
+                "I'm **Storm**, the Wolves of Real Estate AI.\n\n"
                 "I help serious investors dominate **tax deeds, tax liens, wholesale, "
                 "and creative finance**.\n\n"
-                "Bring me a deal, auction, or strategy — we’ll break it down professionally."
+                "Bring me a deal, auction, or strategy — we'll break it down professionally."
             )
         }
     ]
