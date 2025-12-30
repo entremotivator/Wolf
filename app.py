@@ -24,7 +24,7 @@ st.set_page_config(
 # ======================================================
 N8N_WEBHOOK_URL = (
     "https://agentonline-u29564.vm.elestio.app"
-    "/webhook-test/f4afadf7-168a-wolf"
+    "/webhook/f4afadf7-168a-wolf"
 )
 PRIMARY_GREEN = "#CDFF00"
 SECONDARY_GREEN = "#39FF14"
