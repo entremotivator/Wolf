@@ -5,23 +5,28 @@ import os
 from datetime import datetime, timezone
 
 # ======================================================
-# 1. ADVANCED PAGE CONFIGURATION
+# 1. MAXIMUM STEALTH PAGE CONFIGURATION
 # ======================================================
 st.set_page_config(
     page_title="STORM PRO | Wolves of Real Estate",
     page_icon="🐺",
     layout="centered",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': None
+    }
 )
 
 # ======================================================
 # 2. CORE CONFIGURATION & BRANDING
 # ======================================================
 N8N_WEBHOOK_URL = "https://agentonline-u29564.vm.elestio.app/webhook-test/f4afadf7-168a-wolf"
-PRIMARY_GREEN = "#CDFF00"  # Exact Logo Neon Green
-SECONDARY_GREEN = "#39FF14" # High-vis Neon Green
-DEEP_BG = "#020802"        # Absolute Dark Green (No Grey)
-MID_BG = "#051205"         # Subtle Green-Black
+PRIMARY_GREEN = "#CDFF00"
+SECONDARY_GREEN = "#39FF14"
+DEEP_BG = "#020802"
+MID_BG = "#051205"
 ACCENT_GLOW = "rgba(205, 255, 0, 0.2)"
 
 # ======================================================
@@ -41,13 +46,12 @@ def get_base64_image(image_filename):
                 encoded = base64.b64encode(img_file.read()).decode()
                 return f"data:image/jpeg;base64,{encoded}"
     
-    # Professional Fallback
     return "https://raw.githubusercontent.com/manus-ai/assets/main/wolf_logo.png"
 
 LOGO_DATA = get_base64_image("logo(1).jpeg")
 
 # ======================================================
-# 4. THE "NO GREY" PROFESSIONAL CSS ENGINE
+# 4. ABSOLUTE STREAMLIT HIDING CSS ENGINE
 # ======================================================
 st.markdown(
     f"""
@@ -63,31 +67,71 @@ st.markdown(
     * {{
         -webkit-tap-highlight-color: transparent;
         font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }}
 
-    /* NO GREY BACKGROUND ARCHITECTURE */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], .stApp, .main {{
+    /* COMPLETE BACKGROUND CONTROL */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], 
+    .stApp, .main, [class*="appview"], section[tabindex="0"] {{
         background-color: {DEEP_BG} !important;
         background-image: 
             radial-gradient(circle at 50% -20%, {MID_BG} 0%, transparent 70%),
             radial-gradient(circle at 0% 100%, {MID_BG} 0%, transparent 40%) !important;
-        color: #ffffff;
-        margin: 0;
-        padding: 0;
+        color: #ffffff !important;
         overflow-x: hidden;
     }}
 
-    /* HIDE ALL STREAMLIT BRANDING */
-    #MainMenu, header, footer, .stDeployButton, .stAppDeployButton, 
-    [data-testid="stToolbar"], [data-testid="stDecoration"], [data-testid="stStatusWidget"] {{
+    /* NUCLEAR OPTION - HIDE ALL STREAMLIT UI ELEMENTS */
+    #MainMenu, header, footer, 
+    .stDeployButton, .stAppDeployButton, .reportview-container,
+    [data-testid="stToolbar"], 
+    [data-testid="stDecoration"], 
+    [data-testid="stStatusWidget"],
+    [data-testid="stHeader"],
+    [data-testid="stToolbarActions"],
+    [data-testid="stActionButtonIcon"],
+    [data-testid="collapsedControl"],
+    .css-18e3th9, .css-1d391kg,
+    div[data-testid="stSidebarNav"],
+    button[kind="header"],
+    [class*="viewerBadge"],
+    [data-testid="stAppViewBlockContainer"] > div:first-child,
+    section[data-testid="stSidebar"] > div:first-child,
+    .styles_viewerBadge__1yB5_,
+    [data-testid="stException"],
+    [data-testid="stNotification"],
+    div.element-container:has(> div.stAlert),
+    div[data-testid="stFileUploadDropzone"],
+    button[title="View fullscreen"],
+    [data-testid="baseButton-header"],
+    [data-testid="baseButton-headerNoPadding"],
+    .stChatFloatingInputContainer {{
         visibility: hidden !important;
         display: none !important;
+        height: 0 !important;
+        width: 0 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }}
 
-    .block-container {{
-        padding: env(safe-area-inset-top) 1.5rem 7rem 1.5rem !important;
+    /* AGGRESSIVE PADDING OVERRIDE */
+    .block-container, [data-testid="block-container"] {{
+        padding: 2rem 1.5rem 8rem 1.5rem !important;
         max-width: 800px !important;
         background: transparent !important;
+        margin: 0 auto !important;
+    }}
+
+    /* MOBILE SAFE AREA SUPPORT */
+    @supports (padding: max(0px)) {{
+        .block-container {{
+            padding: max(2rem, env(safe-area-inset-top)) 
+                     max(1.5rem, env(safe-area-inset-right)) 
+                     max(8rem, env(safe-area-inset-bottom)) 
+                     max(1.5rem, env(safe-area-inset-left)) !important;
+        }}
     }}
 
     /* PREMIUM HEADER SYSTEM */
@@ -164,10 +208,12 @@ st.markdown(
 
     .stChatMessage {{
         background: transparent !important;
+        border: none !important;
     }}
 
-    /* User Message */
-    .stChatMessage.user > div {{
+    /* User Message Bubble */
+    [data-testid="stChatMessage"][data-testid*="user"] > div,
+    .stChatMessage[class*="user"] > div {{
         background: {MID_BG} !important;
         border: 1px solid {SECONDARY_GREEN}33 !important;
         border-radius: 28px 28px 4px 28px !important;
@@ -176,8 +222,9 @@ st.markdown(
         color: #ffffff !important;
     }}
 
-    /* Assistant Message */
-    .stChatMessage.assistant > div {{
+    /* Assistant Message Bubble */
+    [data-testid="stChatMessage"][data-testid*="assistant"] > div,
+    .stChatMessage[class*="assistant"] > div {{
         background: linear-gradient(165deg, {MID_BG} 0%, {DEEP_BG} 100%) !important;
         border: 1px solid {PRIMARY_GREEN}55 !important;
         border-radius: 28px 28px 28px 4px !important;
@@ -186,10 +233,13 @@ st.markdown(
         position: relative;
     }}
 
-    .stChatMessage.assistant::before {{
+    /* Assistant Label Badge */
+    [data-testid="stChatMessage"][data-testid*="assistant"]::before,
+    .stChatMessage[class*="assistant"]::before {{
         content: 'STORM INTELLIGENCE';
         position: absolute;
-        top: -12px; left: 30px;
+        top: -12px;
+        left: 30px;
         background: {PRIMARY_GREEN};
         color: {DEEP_BG};
         font-size: 0.7rem;
@@ -201,7 +251,11 @@ st.markdown(
     }}
 
     /* INPUT SYSTEM - FIXED TO BOTTOM */
-    [data-testid="stChatInput"] {{
+    [data-testid="stChatInput"],
+    [data-testid="stChatInputContainer"],
+    .stChatFloatingInputContainer {{
+        display: block !important;
+        visibility: visible !important;
         background: {DEEP_BG} !important;
         border-top: 2px solid {PRIMARY_GREEN}11 !important;
         padding: 1.5rem !important;
@@ -213,6 +267,7 @@ st.markdown(
         backdrop-filter: blur(15px);
     }}
 
+    [data-testid="stChatInput"] textarea,
     .stChatInput textarea {{
         background: {MID_BG} !important;
         color: #ffffff !important;
@@ -223,13 +278,17 @@ st.markdown(
         transition: all 0.3s ease !important;
     }}
 
+    [data-testid="stChatInput"] textarea:focus,
     .stChatInput textarea:focus {{
         box-shadow: 0 0 30px {PRIMARY_GREEN}22 !important;
         border-color: {SECONDARY_GREEN} !important;
+        outline: none !important;
     }}
 
     /* BUTTONS - APEX STYLE */
-    .stButton button {{
+    .stButton button,
+    button[kind="primary"],
+    button[kind="secondary"] {{
         background: linear-gradient(135deg, {PRIMARY_GREEN} 0%, {SECONDARY_GREEN} 100%) !important;
         color: {DEEP_BG} !important;
         font-weight: 800 !important;
@@ -243,29 +302,82 @@ st.markdown(
         width: 100% !important;
     }}
 
-    .stButton button:hover {{
+    .stButton button:hover,
+    button[kind="primary"]:hover {{
         transform: translateY(-4px);
         box-shadow: 0 20px 45px {PRIMARY_GREEN}55 !important;
         filter: brightness(1.1);
     }}
 
     /* SCROLLBAR CUSTOMIZATION */
-    ::-webkit-scrollbar {{ width: 10px; }}
-    ::-webkit-scrollbar-track {{ background: {DEEP_BG}; }}
+    ::-webkit-scrollbar {{ 
+        width: 10px; 
+        height: 10px;
+    }}
+    
+    ::-webkit-scrollbar-track {{ 
+        background: {DEEP_BG}; 
+    }}
+    
     ::-webkit-scrollbar-thumb {{ 
         background: linear-gradient({PRIMARY_GREEN}44, {SECONDARY_GREEN}44); 
         border-radius: 10px; 
     }}
-    ::-webkit-scrollbar-thumb:hover {{ background: {PRIMARY_GREEN}; }}
+    
+    ::-webkit-scrollbar-thumb:hover {{ 
+        background: {PRIMARY_GREEN}; 
+    }}
 
     /* ANIMATIONS */
     @keyframes entryFade {{
-        from {{ opacity: 0; transform: translateY(30px); }}
-        to {{ opacity: 1; transform: translateY(0); }}
+        from {{ 
+            opacity: 0; 
+            transform: translateY(30px); 
+        }}
+        to {{ 
+            opacity: 1; 
+            transform: translateY(0); 
+        }}
     }}
 
     .stChatMessage {{
         animation: entryFade 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }}
+
+    /* HIDE EXCEPTION MESSAGES */
+    .element-container:has(.stException),
+    [data-testid="stException"] {{
+        display: none !important;
+    }}
+
+    /* TEXT AND MARKDOWN STYLING */
+    p, span, div {{
+        color: #ffffff !important;
+    }}
+
+    code {{
+        background: {MID_BG} !important;
+        color: {PRIMARY_GREEN} !important;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+    }}
+
+    /* RESPONSIVE ADJUSTMENTS */
+    @media (max-width: 768px) {{
+        .storm-header-container {{
+            padding: 2rem 1rem;
+            border-radius: 30px;
+        }}
+        
+        .logo-outer-frame img {{
+            width: 140px;
+            height: 140px;
+        }}
+        
+        .main-title {{
+            font-size: 2.5rem;
+        }}
     }}
     </style>
     """,
@@ -300,8 +412,8 @@ def render_storm_footer():
         f"""
         <div style="margin-top: 5rem; padding: 4rem 1rem; text-align: center; border-top: 2px solid {PRIMARY_GREEN}11;">
             <div style="color: {PRIMARY_GREEN}; font-weight: 900; letter-spacing: 0.3em; margin-bottom: 0.75rem; font-size: 1.2rem;">WOLVES OF REAL ESTATE</div>
-            <div style="color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em;">© 2025 DOMINATION ENGINE • VERSION 3.0 FINAL</div>
-            <div style="margin-top: 2rem; color: {SECONDARY_GREEN}; font-size: 0.7rem; opacity: 0.5; font-family: 'JetBrains Mono', monospace;">[ PROTOCOL: NO_GREY_ZONE_ACTIVE ]</div>
+            <div style="color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em;">© 2025 DOMINATION ENGINE • VERSION 4.0 STEALTH</div>
+            <div style="margin-top: 2rem; color: {SECONDARY_GREEN}; font-size: 0.7rem; opacity: 0.5; font-family: 'JetBrains Mono', monospace;">[ ALL_STREAMLIT_ELEMENTS_HIDDEN ]</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -345,7 +457,7 @@ if user_input:
         
         # Prepare Payload for N8N
         payload = {
-            "assistant": "Storm Pro Final",
+            "assistant": "Storm Pro Stealth",
             "community": "Wolves of Real Estate",
             "message": user_input,
             "history": st.session_state.messages[-8:],
