@@ -600,12 +600,14 @@ with st.container():
     st.markdown('<div class="storm-header">', unsafe_allow_html=True)
     
     # Logo Container - Perfectly Centered with Wrapper
-    st.markdown(
-        '<div class="logo-container"><div class="logo-wrapper">',
-        unsafe_allow_html=True
-    )
-    st.image("assets/logo(1).jpeg", width=200)
-    st.markdown('</div></div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown(
+            '<div class="logo-container"><div class="logo-wrapper">',
+            unsafe_allow_html=True
+        )
+        st.image("assets/logo(1).jpeg", width=200)
+        st.markdown('</div></div>', unsafe_allow_html=True)
     
     # Title and Subtitle
     st.markdown(
