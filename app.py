@@ -8,16 +8,18 @@ from datetime import datetime, timezone
 st.set_page_config(
     page_title="Storm | Wolves of Real Estate",
     page_icon="🐺",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
 st.markdown(
     """
-    <meta name="theme-color" content="#CDFF00">
+    <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Storm">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
     """,
     unsafe_allow_html=True
 )
@@ -31,212 +33,411 @@ N8N_WEBHOOK_URL = (
 )
 
 # ======================================================
-# GLOBAL THEME (NEON YELLOW-GREEN BRAND COLORS)
+# FULL MOBILE THEME - GREEN BACKGROUND EVERYWHERE
 # ======================================================
 st.markdown(
     """
     <style>
-    /* Hide all Streamlit branding, menus, and sharing buttons */
-    #MainMenu {visibility: hidden;}
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
-    .stDeployButton {display: none;}
-    .stAppDeployButton {display: none;}
-    [data-testid="stToolbar"] {display: none;}
-    [data-testid="stDecoration"] {display: none;}
-    [data-testid="stStatusWidget"] {display: none;}
+    /* HIDE ALL STREAMLIT BRANDING */
+    #MainMenu {visibility: hidden !important;}
+    header {visibility: hidden !important;}
+    footer {visibility: hidden !important;}
+    .stDeployButton {display: none !important;}
+    .stAppDeployButton {display: none !important;}
+    [data-testid="stToolbar"] {display: none !important;}
+    [data-testid="stDecoration"] {display: none !important;}
+    [data-testid="stStatusWidget"] {display: none !important;}
+    section[data-testid="stSidebar"] {display: none !important;}
     .css-18e3th9 {padding-top: 0rem;}
     .css-1d391kg {padding-top: 0rem;}
-    section[data-testid="stSidebar"] {display: none;}
     
-    /* Full-screen mobile theming with green background */
-    html, body, [data-testid="stAppViewContainer"], .stApp {
-        background: #000000 !important;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
+    /* FULL SCREEN DARK GREEN THEME FOR IPHONE */
+    * {
+        -webkit-tap-highlight-color: rgba(205, 255, 0, 0.2);
     }
     
-    .stApp {
-        background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%) !important;
+    html {
+        background: #0a0a0a !important;
+        overflow-x: hidden;
     }
     
     body {
-        background-color: #000000;
+        background: #0a0a0a !important;
         color: #ffffff;
-    }
-
-    /* Enhanced mobile-responsive header */
-    .storm-header {
-        text-align: center;
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-        padding: 1.5rem 0.75rem;
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
-        border-radius: 16px;
-        border: 2px solid #CDFF00;
-        box-shadow: 0 0 30px rgba(205, 255, 0, 0.3);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
     }
     
-    /* Logo container for perfect centering */
+    [data-testid="stAppViewContainer"],
+    [data-testid="stApp"],
+    .stApp,
+    .main {
+        background: #0a0a0a !important;
+        min-height: 100vh;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .block-container {
+        padding: env(safe-area-inset-top) 1rem 1rem 1rem !important;
+        max-width: 100% !important;
+        background: #0a0a0a !important;
+    }
+    
+    /* ENHANCED MOBILE HEADER WITH PERFECT CENTERING */
+    .storm-header {
+        text-align: center;
+        margin: 0 auto 1.5rem auto;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+        border-radius: 20px;
+        border: 3px solid #CDFF00;
+        box-shadow: 
+            0 0 40px rgba(205, 255, 0, 0.4),
+            inset 0 0 20px rgba(205, 255, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .storm-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(205, 255, 0, 0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    
+    /* LOGO CONTAINER - PERFECTLY CENTERED */
     .logo-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
     }
     
     .logo-container img {
-        border-radius: 12px;
-        border: 3px solid #CDFF00;
-        box-shadow: 0 0 25px rgba(205, 255, 0, 0.4);
-        max-width: 100%;
-        height: auto;
-    }
-
-    /* Mobile-optimized STORM title */
-    .storm-title {
-        font-size: clamp(2rem, 8vw, 3.5rem);
-        font-weight: 900;
-        letter-spacing: 0.15em;
-        margin-top: 1rem;
-        color: #CDFF00;
-        text-shadow: 0 0 20px rgba(205, 255, 0, 0.6);
-        animation: glow 2s ease-in-out infinite alternate;
-        line-height: 1.2;
+        width: 180px;
+        height: 180px;
+        border-radius: 20px;
+        border: 4px solid #CDFF00;
+        box-shadow: 
+            0 0 40px rgba(205, 255, 0, 0.6),
+            0 8px 32px rgba(0, 0, 0, 0.4);
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
     }
     
-    @keyframes glow {
-        from {
-            text-shadow: 0 0 15px rgba(205, 255, 0, 0.6), 0 0 25px rgba(205, 255, 0, 0.4);
+    /* STORM TITLE - ENHANCED MOBILE */
+    .storm-title {
+        font-size: clamp(2.5rem, 10vw, 4rem);
+        font-weight: 900;
+        letter-spacing: 0.2em;
+        margin: 1rem 0 0.5rem 0;
+        color: #CDFF00;
+        text-shadow: 
+            0 0 30px rgba(205, 255, 0, 0.8),
+            0 0 60px rgba(205, 255, 0, 0.4),
+            0 4px 8px rgba(0, 0, 0, 0.5);
+        animation: titleGlow 3s ease-in-out infinite alternate;
+        line-height: 1.1;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+    
+    @keyframes titleGlow {
+        0% {
+            text-shadow: 
+                0 0 20px rgba(205, 255, 0, 0.6),
+                0 0 40px rgba(205, 255, 0, 0.3),
+                0 4px 8px rgba(0, 0, 0, 0.5);
+            transform: scale(1);
         }
-        to {
-            text-shadow: 0 0 25px rgba(205, 255, 0, 0.9), 0 0 40px rgba(205, 255, 0, 0.6);
+        100% {
+            text-shadow: 
+                0 0 40px rgba(205, 255, 0, 1),
+                0 0 80px rgba(205, 255, 0, 0.6),
+                0 4px 12px rgba(0, 0, 0, 0.5);
+            transform: scale(1.02);
         }
     }
-
-    /* Mobile-responsive subtitle */
+    
+    /* SUBTITLE - MOBILE OPTIMIZED */
     .storm-subtitle {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
-        color: rgba(205, 255, 0, 0.9);
-        font-weight: 500;
-        margin-top: 0.5rem;
-        line-height: 1.4;
-        padding: 0 0.5rem;
+        font-size: clamp(0.85rem, 3vw, 1.2rem);
+        color: rgba(205, 255, 0, 0.95);
+        font-weight: 600;
+        margin-top: 0.75rem;
+        line-height: 1.5;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
-
-    /* Divider */
+    
+    /* DIVIDER WITH GLOW */
     .divider {
         border: none;
-        height: 2px;
-        background: linear-gradient(90deg, transparent 0%, #CDFF00 50%, transparent 100%);
-        margin: 1.5rem 0;
-        box-shadow: 0 0 10px rgba(205, 255, 0, 0.3);
+        height: 3px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            #CDFF00 20%, 
+            #CDFF00 80%, 
+            transparent 100%);
+        margin: 2rem 0;
+        box-shadow: 0 0 15px rgba(205, 255, 0, 0.5);
+        border-radius: 2px;
     }
-
-    /* Mobile-optimized chat messages */
-    .stChatMessage.user div {
-        background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-        border: 2px solid #CDFF00;
-        border-radius: 16px;
-        padding: 12px 16px;
-        color: #ffffff;
-        box-shadow: 0 4px 12px rgba(205, 255, 0, 0.2);
-        font-size: clamp(0.9rem, 3vw, 1rem);
+    
+    /* CHAT MESSAGES - FULL GREEN THEME */
+    [data-testid="stChatMessageContainer"] {
+        background: #0a0a0a !important;
+        padding: 0.5rem 0;
     }
-
-    .stChatMessage.assistant div {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-        border-left: 5px solid #CDFF00;
-        border-radius: 16px;
-        padding: 14px 18px;
-        color: #ffffff;
-        box-shadow: 0 4px 16px rgba(205, 255, 0, 0.3);
-        font-size: clamp(0.9rem, 3vw, 1rem);
+    
+    .stChatMessage {
+        background: #0a0a0a !important;
+        margin: 0.75rem 0 !important;
     }
-
-    /* Mobile-optimized buttons */
+    
+    .stChatMessage.user > div {
+        background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 100%) !important;
+        border: 2px solid #CDFF00 !important;
+        border-radius: 18px !important;
+        padding: 1rem 1.25rem !important;
+        color: #ffffff !important;
+        box-shadow: 
+            0 4px 16px rgba(205, 255, 0, 0.3),
+            inset 0 1px 0 rgba(205, 255, 0, 0.2) !important;
+        font-size: clamp(0.95rem, 3.5vw, 1.1rem) !important;
+        line-height: 1.5 !important;
+    }
+    
+    .stChatMessage.assistant > div {
+        background: linear-gradient(135deg, #0d1a0d 0%, #1a2a1a 100%) !important;
+        border-left: 5px solid #CDFF00 !important;
+        border-radius: 18px !important;
+        padding: 1.1rem 1.25rem !important;
+        color: #ffffff !important;
+        box-shadow: 
+            0 4px 20px rgba(205, 255, 0, 0.4),
+            inset 0 1px 0 rgba(205, 255, 0, 0.2) !important;
+        font-size: clamp(0.95rem, 3.5vw, 1.1rem) !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* BUTTONS - FULL GREEN THEME */
     .stButton button {
-        background: linear-gradient(135deg, #CDFF00 0%, #b8e600 100%);
-        color: #000000;
-        font-weight: 700;
-        font-size: clamp(0.9rem, 3vw, 1rem);
-        border: none;
-        border-radius: 12px;
-        padding: 0.875rem 1.5rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(205, 255, 0, 0.4);
-        width: 100%;
+        background: linear-gradient(135deg, #CDFF00 0%, #a8d600 100%) !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
+        font-size: clamp(1rem, 3.5vw, 1.1rem) !important;
+        border: none !important;
+        border-radius: 14px !important;
+        padding: 1rem 1.5rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 
+            0 6px 20px rgba(205, 255, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        width: 100% !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
-
+    
     .stButton button:hover {
-        background: linear-gradient(135deg, #b8e600 0%, #CDFF00 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(205, 255, 0, 0.6);
+        background: linear-gradient(135deg, #e0ff33 0%, #CDFF00 100%) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 
+            0 10px 30px rgba(205, 255, 0, 0.7),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
     }
-
-    /* Mobile-optimized chat input */
+    
+    .stButton button:active {
+        transform: translateY(-1px) !important;
+        box-shadow: 
+            0 4px 15px rgba(205, 255, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    /* CHAT INPUT - FULL GREEN THEME */
+    [data-testid="stChatInput"] {
+        background: #0a0a0a !important;
+        padding: 1rem 0 !important;
+    }
+    
     .stChatInput input {
-        background-color: #1a1a1a;
-        color: #ffffff;
-        border: 2px solid #CDFF00;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        font-size: clamp(0.9rem, 3vw, 1rem);
-        padding: 0.875rem 1rem;
+        background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 100%) !important;
+        color: #ffffff !important;
+        border: 3px solid #CDFF00 !important;
+        border-radius: 16px !important;
+        transition: all 0.3s ease !important;
+        font-size: clamp(1rem, 3.5vw, 1.1rem) !important;
+        padding: 1rem 1.25rem !important;
+        box-shadow: 
+            0 4px 16px rgba(205, 255, 0, 0.3),
+            inset 0 1px 0 rgba(205, 255, 0, 0.1) !important;
     }
-
+    
     .stChatInput input:focus {
-        border-color: #CDFF00;
-        box-shadow: 0 0 0 3px rgba(205, 255, 0, 0.3);
-        background-color: #0d0d0d;
+        border-color: #CDFF00 !important;
+        box-shadow: 
+            0 0 0 4px rgba(205, 255, 0, 0.3),
+            0 4px 20px rgba(205, 255, 0, 0.5),
+            inset 0 1px 0 rgba(205, 255, 0, 0.2) !important;
+        background: linear-gradient(135deg, #0d1a0d 0%, #1a2a1a 100%) !important;
+        outline: none !important;
     }
     
     .stChatInput input::placeholder {
-        color: rgba(205, 255, 0, 0.6);
+        color: rgba(205, 255, 0, 0.6) !important;
+        font-weight: 500;
     }
-
-    /* Footer */
+    
+    /* FOOTER - GREEN THEME */
     .footer {
         text-align: center;
-        font-size: clamp(0.75rem, 2.5vw, 0.85rem);
-        color: rgba(205, 255, 0, 0.7);
-        margin-top: 2rem;
-        padding: 1rem;
+        font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        color: rgba(205, 255, 0, 0.8);
+        margin-top: 2.5rem;
+        padding: 1.5rem 1rem;
+        background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+        border-radius: 16px;
+        border: 2px solid rgba(205, 255, 0, 0.3);
+        box-shadow: 0 0 20px rgba(205, 255, 0, 0.2);
+        font-weight: 600;
     }
     
-    /* Mobile-optimized scrollbar with green theme */
+    /* SCROLLBAR - GREEN THEME */
     ::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
+        width: 10px;
         background: #0a0a0a;
     }
     
+    ::-webkit-scrollbar-track {
+        background: #0d0d0d;
+        border-radius: 5px;
+    }
+    
     ::-webkit-scrollbar-thumb {
-        background: #CDFF00;
-        border-radius: 4px;
+        background: linear-gradient(180deg, #CDFF00 0%, #a8d600 100%);
+        border-radius: 5px;
+        border: 2px solid #0d0d0d;
     }
     
     ::-webkit-scrollbar-thumb:hover {
-        background: #b8e600;
+        background: linear-gradient(180deg, #e0ff33 0%, #CDFF00 100%);
     }
     
-    /* Mobile responsive adjustments */
+    /* MOBILE RESPONSIVE - IPHONE OPTIMIZATION */
     @media (max-width: 768px) {
-        .storm-header {
-            padding: 1rem 0.5rem;
-            margin-top: 0.25rem;
+        .block-container {
+            padding: max(env(safe-area-inset-top), 1rem) 0.75rem 1rem 0.75rem !important;
         }
         
-        .stChatMessage {
-            margin: 0.5rem 0 !important;
+        .storm-header {
+            padding: 1.5rem 0.75rem;
+            margin: 0 0 1rem 0;
+            border-radius: 16px;
+        }
+        
+        .logo-container img {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .storm-title {
+            font-size: clamp(2rem, 9vw, 3rem);
+            letter-spacing: 0.15em;
+        }
+        
+        .storm-subtitle {
+            font-size: clamp(0.8rem, 2.8vw, 1rem);
+            padding: 0 0.75rem;
         }
         
         .divider {
-            margin: 1rem 0;
+            margin: 1.5rem 0;
         }
+        
+        .stChatMessage {
+            margin: 0.6rem 0 !important;
+        }
+        
+        .stChatMessage.user > div,
+        .stChatMessage.assistant > div {
+            padding: 0.9rem 1rem !important;
+            border-radius: 14px !important;
+        }
+        
+        .footer {
+            margin-top: 2rem;
+            padding: 1.25rem 0.75rem;
+        }
+    }
+    
+    /* EXTRA SMALL SCREENS */
+    @media (max-width: 380px) {
+        .logo-container img {
+            width: 130px;
+            height: 130px;
+        }
+        
+        .storm-title {
+            font-size: clamp(1.75rem, 8vw, 2.5rem);
+        }
+        
+        .storm-subtitle {
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+        }
+    }
+    
+    /* LANDSCAPE MODE */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .storm-header {
+            padding: 1rem 0.75rem;
+        }
+        
+        .logo-container {
+            margin-bottom: 0.75rem;
+        }
+        
+        .logo-container img {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .storm-title {
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            margin: 0.5rem 0 0.25rem 0;
+        }
+        
+        .storm-subtitle {
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            margin-top: 0.5rem;
+        }
+    }
+    
+    /* LOADING ANIMATION */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stChatMessage {
+        animation: fadeIn 0.3s ease-out;
     }
     </style>
     """,
@@ -244,22 +445,17 @@ st.markdown(
 )
 
 # ======================================================
-# HEADER + LOGO (PERFECTLY CENTERED)
+# HEADER WITH CENTERED LOGO
 # ======================================================
 with st.container():
     st.markdown('<div class="storm-header">', unsafe_allow_html=True)
     
-    st.markdown(
-        '<div class="logo-container">',
-        unsafe_allow_html=True
-    )
-    
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.image("assets/logo(1).jpeg", width=200)
-    
+    # Logo Container - Perfectly Centered
+    st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+    st.image("assets/logo(1).jpeg", use_container_width=False)
     st.markdown('</div>', unsafe_allow_html=True)
     
+    # Title and Subtitle
     st.markdown(
         """
         <div class="storm-title">STORM</div>
@@ -281,10 +477,11 @@ if "messages" not in st.session_state:
         {
             "role": "assistant",
             "content": (
-                "I'm **Storm**, the Wolves of Real Estate AI.\n\n"
-                "I help serious investors dominate **tax deeds, tax liens, wholesale, "
-                "and creative finance**.\n\n"
-                "Bring me a deal, auction, or strategy — we'll break it down professionally."
+                "🐺 **Welcome to Storm** — the Wolves of Real Estate AI.\n\n"
+                "I specialize in **tax deeds, tax liens, wholesale deals, and creative finance strategies**.\n\n"
+                "Whether you're analyzing auction properties, calculating ROI, or structuring creative financing — "
+                "I'm here to help you dominate the market.\n\n"
+                "**What deal are we attacking today?**"
             )
         }
     ]
@@ -319,7 +516,7 @@ if user_input:
         "assistant": "Storm",
         "community": "Wolves of Real Estate",
         "message": user_input,
-        "history": st.session_state.messages[-10:],  # limit memory
+        "history": st.session_state.messages[-10:],
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds")
     }
 
@@ -333,10 +530,10 @@ if user_input:
         if response.status_code == 200 and response.text:
             storm_reply = response.text.strip()
         else:
-            storm_reply = "⚠️ Storm did not return a response."
+            storm_reply = "⚠️ Storm encountered an issue. Let's try that again."
 
     except requests.exceptions.RequestException as e:
-        storm_reply = f"⚠️ Connection error: {e}"
+        storm_reply = f"⚠️ Connection error: Unable to reach Storm's server. Please check your connection."
 
     # ==================================================
     # DISPLAY RESPONSE
@@ -349,7 +546,7 @@ if user_input:
         st.markdown(storm_reply)
 
 # ======================================================
-# FOOTER + RESET
+# FOOTER + RESET BUTTON
 # ======================================================
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
@@ -357,7 +554,10 @@ if st.button("🔄 Reset Conversation", use_container_width=True):
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": "Conversation reset. What deal are we analyzing next?"
+            "content": (
+                "🐺 **Conversation Reset**\n\n"
+                "Ready to analyze your next deal. What are we working on?"
+            )
         }
     ]
     st.rerun()
@@ -365,7 +565,8 @@ if st.button("🔄 Reset Conversation", use_container_width=True):
 st.markdown(
     """
     <div class="footer">
-        Wolves of Real Estate © 2025 • Built for serious operators
+        <strong>Wolves of Real Estate © 2025</strong><br>
+        Built for serious operators who dominate the market
     </div>
     """,
     unsafe_allow_html=True
