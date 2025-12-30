@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-N8N_WEBHOOK_URL = "https://YOUR-N8N-DOMAIN/webhook/f4afadf7-168a-wolf"
+N8N_WEBHOOK_URL = "https://YOUR-N8N-DOMAIN/webhook-test/f4afadf7-168a-wolf"
 
 # =========================================================
 # THEME & GLOBAL STYLES
