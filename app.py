@@ -219,7 +219,7 @@ with st.container():
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.image("/images/logo-281-29.jpeg", width=200)
+        st.image("/assets/logo(1).jpeg", width=200)
     
     st.markdown(
         """
