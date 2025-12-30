@@ -20,9 +20,9 @@ st.set_page_config(
 )
 
 # ======================================================
-# 2. CORE CONFIGURATION & BRANDING
+# 2. CORE CONFIGURATION & BRANDING - FIXED WEBHOOK
 # ======================================================
-N8N_WEBHOOK_URL = "https://agentonline-u29564.vm.elestio.app/webhook/f4afadf7-168a-wolf"
+N8N_WEBHOOK_URL = "https://agentonline-u29564.vm.elestio.app/webhook-test/f4afadf7-168a-wolf"
 PRIMARY_GREEN = "#CDFF00"
 SECONDARY_GREEN = "#39FF14"
 DEEP_BG = "#020802"
@@ -396,11 +396,12 @@ def render_storm_header():
                 <img src="{LOGO_DATA}" alt="Storm Logo">
             </div>
             <h1 class="main-title">STORM</h1>
-            <p class="sub-title">Wolves of Real Estate • Learning Assistant</p>
+            <p class="sub-title">Wolves of Real Estate • AI Assistant</p>
             <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
-                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">COURSE HELP</span>
-                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">COMMUNITY</span>
-                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">RESOURCES</span>
+                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">TAX DEEDS</span>
+                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">TAX LIENS</span>
+                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">WHOLESALE</span>
+                <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">CREATIVE FINANCE</span>
             </div>
         </div>
         """,
@@ -412,7 +413,7 @@ def render_storm_footer():
         f"""
         <div style="margin-top: 5rem; padding: 4rem 1rem; text-align: center; border-top: 2px solid {PRIMARY_GREEN}11;">
             <div style="color: {PRIMARY_GREEN}; font-weight: 900; letter-spacing: 0.3em; margin-bottom: 0.75rem; font-size: 1.2rem;">WOLVES OF REAL ESTATE</div>
-            <div style="color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em;">© 2025 Learning Community</div>
+            <div style="color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em;">© 2025 Built for Serious Operators</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -429,9 +430,11 @@ if "messages" not in st.session_state:
     st.session_state.messages = [
         {
             "role": "assistant", 
-            "content": "🐺 **Welcome to STORM!** \n\n"
-                       "I'm here to help you with course materials, community questions, and learning resources. \n\n"
-                       "**How can I support your learning journey today?**"
+            "content": "🐺 **Welcome to Storm** — the Wolves of Real Estate AI.\n\n"
+                       "I specialize in **tax deeds, tax liens, wholesale deals, and creative finance strategies**.\n\n"
+                       "Whether you're analyzing auction properties, calculating ROI, or structuring creative financing — "
+                       "I'm here to help you dominate the market.\n\n"
+                       "**What deal are we attacking today?**"
         }
     ]
 
@@ -441,7 +444,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # User Interaction & Webhook Logic
-user_input = st.chat_input("Ask about courses, community, or resources...")
+user_input = st.chat_input("Ask about auctions, liens, wholesale spreads, or creative finance strategies…")
 
 if user_input:
     # Add user message to state
@@ -452,26 +455,34 @@ if user_input:
     # Professional Assistant Response
     with st.chat_message("assistant"):
         status_placeholder = st.empty()
-        status_placeholder.markdown("⚡ *Finding the best resources for you...*")
+        status_placeholder.markdown("🐺 *Storm is analyzing...*")
         
-        # Prepare Payload for N8N
+        # Prepare Payload for N8N - CORRECT FORMAT
         payload = {
-            "assistant": "Storm Learning Assistant",
+            "assistant": "Storm",
             "community": "Wolves of Real Estate",
             "message": user_input,
-            "history": st.session_state.messages[-8:],
-            "timestamp": datetime.now(timezone.utc).isoformat()
+            "history": st.session_state.messages[-10:],
+            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds")
         }
         
         try:
-            # Execute Webhook Call
-            response = requests.post(N8N_WEBHOOK_URL, json=payload, timeout=45)
-            if response.status_code == 200:
+            # Execute Webhook Call with proper timeout
+            response = requests.post(
+                N8N_WEBHOOK_URL, 
+                json=payload, 
+                timeout=60
+            )
+            
+            if response.status_code == 200 and response.text:
                 final_reply = response.text.strip()
             else:
-                final_reply = "⚠️ *I'm having trouble accessing resources right now. Please try again.*"
-        except Exception as e:
-            final_reply = f"⚠️ *Connection issue detected. Please retry your question.*"
+                final_reply = "⚠️ Storm encountered an issue. Let's try that again."
+                
+        except requests.exceptions.Timeout:
+            final_reply = "⚠️ **Request timed out.** Storm is taking longer than expected. Please try again."
+        except requests.exceptions.RequestException as e:
+            final_reply = "⚠️ **Connection error:** Unable to reach Storm's server. Please check your connection."
         
         # Update UI with response
         status_placeholder.markdown(final_reply)
@@ -479,8 +490,13 @@ if user_input:
 
 # Reset & Footer Section
 st.markdown("<br>", unsafe_allow_html=True)
-if st.button("🔄 START NEW CONVERSATION", use_container_width=True):
-    st.session_state.messages = [{"role": "assistant", "content": "🐺 **Ready for your questions!** How can I help with your learning today?"}]
+if st.button("🔄 RESET CONVERSATION", width="stretch"):
+    st.session_state.messages = [
+        {
+            "role": "assistant", 
+            "content": "🐺 **Conversation Reset**\n\nReady to analyze your next deal. What are we working on?"
+        }
+    ]
     st.rerun()
 
 render_storm_footer()
