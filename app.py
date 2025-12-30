@@ -20,6 +20,7 @@ N8N_WEBHOOK_URL = (
 )
 
 # ======================================================
+# GLOBAL THEME (NEON YELLOW-GREEN BRAND COLORS)
 # ======================================================
 st.markdown(
     """
@@ -42,22 +43,8 @@ st.markdown(
         padding: 2rem 1rem;
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
         border-radius: 16px;
-        border: 1px solid #CDFF00;
-        box-shadow: 0 0 30px rgba(205, 255, 0, 0.2);
-    }
-    
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 1rem;
-        animation: fadeIn 1s ease-in;
-    }
-    
-    .logo-container img {
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(205, 255, 0, 0.3);
         border: 2px solid #CDFF00;
+        box-shadow: 0 0 30px rgba(205, 255, 0, 0.2);
     }
 
     .storm-title {
@@ -78,18 +65,12 @@ st.markdown(
             text-shadow: 0 0 20px rgba(205, 255, 0, 0.8), 0 0 30px rgba(205, 255, 0, 0.5);
         }
     }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
 
     .storm-subtitle {
         font-size: 1.1rem;
         color: rgba(205, 255, 0, 0.9);
         font-weight: 500;
         margin-top: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     /* Divider */
@@ -98,7 +79,7 @@ st.markdown(
         height: 2px;
         background: linear-gradient(90deg, transparent 0%, #CDFF00 50%, transparent 100%);
         margin: 2rem 0;
-        box-shadow: 0 0 10px rgba(205, 255, 0, 0.5);
+        box-shadow: 0 0 10px rgba(205, 255, 0, 0.3);
     }
 
     /* Chat Messages */
@@ -131,8 +112,6 @@ st.markdown(
         padding: 0.75rem 1.5rem;
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(205, 255, 0, 0.3);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
     }
 
     .stButton button:hover {
@@ -140,24 +119,13 @@ st.markdown(
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(205, 255, 0, 0.5);
     }
-    
-    .stButton button:active {
-        transform: translateY(0);
-    }
 
     /* Chat Input */
-    .stChatInput {
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    
     .stChatInput input {
         background-color: #1a1a1a;
         color: #ffffff;
         border: 2px solid #333333;
         border-radius: 12px;
-        padding: 12px 16px;
-        font-size: 1rem;
         transition: all 0.3s ease;
     }
 
@@ -178,9 +146,6 @@ st.markdown(
         color: rgba(205, 255, 0, 0.7);
         margin-top: 2rem;
         padding: 1rem;
-        border-top: 1px solid rgba(205, 255, 0, 0.2);
-        background: linear-gradient(180deg, transparent 0%, rgba(205, 255, 0, 0.05) 100%);
-        border-radius: 8px;
     }
     
     /* Scrollbar */
@@ -200,26 +165,21 @@ st.markdown(
     ::-webkit-scrollbar-thumb:hover {
         background: #b8e600;
     }
-    
-    /* Chat Container */
-    .stChatFloatingInputContainer {
-        background-color: #000000;
-        border-top: 1px solid #CDFF00;
-        box-shadow: 0 -4px 12px rgba(205, 255, 0, 0.1);
-    }
     </style>
     """,
     unsafe_allow_html=True
 )
 
 # ======================================================
+# HEADER + LOGO (CENTERED)
 # ======================================================
 with st.container():
     st.markdown('<div class="storm-header">', unsafe_allow_html=True)
     
+    # Center the logo using columns
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.image("assets/logo(1).jpeg", width=200)
+        st.image("assets/logo(1).jpeg", width=180)
     
     st.markdown(
         """
@@ -233,7 +193,6 @@ with st.container():
     )
 
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-
 
 # ======================================================
 # SESSION STATE (CHAT MEMORY)
@@ -327,7 +286,7 @@ if st.button("🔄 Reset Conversation", use_container_width=True):
 st.markdown(
     """
     <div class="footer">
-        🐺 Wolves of Real Estate © 2025 • Built for serious operators
+        Wolves of Real Estate © 2025 • Built for serious operators
     </div>
     """,
     unsafe_allow_html=True
