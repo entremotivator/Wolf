@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 
 # ======================================================
 # PAGE CONFIG
@@ -12,11 +12,11 @@ st.set_page_config(
 )
 
 # ======================================================
-# N8N WEBHOOK (FIXED)
+# N8N WEBHOOK (LIVE TEST URL)
 # ======================================================
 N8N_WEBHOOK_URL = (
     "https://agentonline-u29564.vm.elestio.app"
-    "/webhook/f4afadf7-168a-wolf"
+    "/webhook-test/f4afadf7-168a-wolf"
 )
 
 # ======================================================
@@ -37,9 +37,10 @@ st.markdown(
     }
 
     .storm-title {
-        font-size: 2.7rem;
+        font-size: 2.6rem;
         font-weight: 800;
         letter-spacing: 0.04em;
+        margin-top: 0.5rem;
     }
 
     .storm-subtitle {
@@ -77,36 +78,36 @@ st.markdown(
 )
 
 # ======================================================
-# HEADER / LOGO
+# HEADER + LOGO (LOCAL PATH)
 # ======================================================
-st.markdown(
-    """
-    <div class="storm-header">
-        <img src="https://raw.githubusercontent.com/your-org/assets/main/logo(1).jpeg"
-             width="120"
-             style="margin-bottom:10px;" />
+with st.container():
+    st.markdown('<div class="storm-header">', unsafe_allow_html=True)
+    st.image("assets/logo(1).jpeg", width=130)
+    st.markdown(
+        """
         <div class="storm-title">Storm</div>
         <div class="storm-subtitle">
             Wolves of Real Estate AI • Tax Deeds • Tax Liens • Wholesale • Creative Finance
         </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
 # ======================================================
-# SESSION STATE (MEMORY)
+# SESSION STATE (CHAT MEMORY)
 # ======================================================
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
             "role": "assistant",
             "content": (
-                "I’m **Storm**, Wolves of Real Estate AI.\n\n"
-                "I specialize in **tax deeds, tax liens, wholesale, and creative finance**.\n\n"
-                "Bring me a deal, an auction, or a strategy — we’ll break it down professionally."
+                "I’m **Storm**, the Wolves of Real Estate AI.\n\n"
+                "I help serious investors dominate **tax deeds, tax liens, wholesale, "
+                "and creative finance**.\n\n"
+                "Bring me a deal, auction, or strategy — we’ll break it down professionally."
             )
         }
     ]
@@ -126,7 +127,7 @@ user_input = st.chat_input(
 )
 
 if user_input:
-    # Add user message locally
+    # Add user message
     st.session_state.messages.append(
         {"role": "user", "content": user_input}
     )
@@ -135,14 +136,14 @@ if user_input:
         st.markdown(user_input)
 
     # ==================================================
-    # SEND TO N8N (FIXED PAYLOAD)
+    # SEND TO N8N (CLEAN PAYLOAD)
     # ==================================================
     payload = {
         "assistant": "Storm",
         "community": "Wolves of Real Estate",
         "message": user_input,
         "history": st.session_state.messages[-10:],  # limit memory
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds")
     }
 
     try:
@@ -155,13 +156,13 @@ if user_input:
         if response.status_code == 200 and response.text:
             storm_reply = response.text.strip()
         else:
-            storm_reply = "⚠️ Storm didn’t return a response."
+            storm_reply = "⚠️ Storm did not return a response."
 
     except requests.exceptions.RequestException as e:
         storm_reply = f"⚠️ Connection error: {e}"
 
     # ==================================================
-    # DISPLAY ASSISTANT RESPONSE
+    # DISPLAY RESPONSE
     # ==================================================
     st.session_state.messages.append(
         {"role": "assistant", "content": storm_reply}
@@ -171,7 +172,7 @@ if user_input:
         st.markdown(storm_reply)
 
 # ======================================================
-# FOOTER CONTROLS
+# FOOTER + RESET
 # ======================================================
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
