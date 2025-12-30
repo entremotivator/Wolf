@@ -82,7 +82,7 @@ st.markdown(
 st.markdown(
     """
     <div class="storm-header">
-        <img src="https://raw.githubusercontent.com/your-org/assets/main/wolves_logo.png"
+        <img src="https://raw.githubusercontent.com/your-org/assets/main/logo(1).jpeg"
              width="120"
              style="margin-bottom:10px;" />
         <div class="storm-title">Storm</div>
