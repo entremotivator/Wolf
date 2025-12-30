@@ -22,7 +22,10 @@ st.set_page_config(
 # ======================================================
 # 2. CORE CONFIGURATION & BRANDING - FIXED WEBHOOK
 # ======================================================
-N8N_WEBHOOK_URL = "https://agentonline-u29564.vm.elestio.app/webhook/f4afadf7-168a-wolf"
+N8N_WEBHOOK_URL = (
+    "https://agentonline-u29564.vm.elestio.app"
+    "/webhook-test/f4afadf7-168a-wolf"
+)
 PRIMARY_GREEN = "#CDFF00"
 SECONDARY_GREEN = "#39FF14"
 DEEP_BG = "#020802"
