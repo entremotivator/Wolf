@@ -6,6 +6,7 @@ import json
 from datetime import datetime, timezone
 from typing import List, Dict
 
+
 # ======================================================
 # 1. MAXIMUM STEALTH PAGE CONFIGURATION
 # ======================================================
@@ -21,6 +22,7 @@ st.set_page_config(
     }
 )
 
+
 # ======================================================
 # 2. CORE CONFIGURATION & BRANDING
 # ======================================================
@@ -33,6 +35,7 @@ SECONDARY_GREEN = "#39FF14"
 DEEP_BG = "#020802"
 MID_BG = "#051205"
 ACCENT_GLOW = "rgba(205, 255, 0, 0.2)"
+
 
 # ======================================================
 # 3. ROBUST IMAGE LOADING (BASE64)
@@ -60,564 +63,434 @@ CHATBOT_ICON_DATA = get_base64_image("IMG_1100.png")
 
 
 # ======================================================
-# 4. ABSOLUTE STREAMLIT HIDING CSS ENGINE
+# 4. ADVANCED CUSTOM CSS WITH STEALTH MODE
 # ======================================================
+# Hide Streamlit branding, menu, footer, and profile elements
 st.markdown(
     f"""
-    <meta name="theme-color" content="{DEEP_BG}">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap');
-
-    /* GLOBAL RESET */
+    /* ============================================
+       STREAMLIT BRANDING REMOVAL - MAXIMUM STEALTH
+       ============================================ */
+    
+    /* Hide Streamlit header, menu, footer, and all branding */
+    #MainMenu {{visibility: hidden;}}
+    header {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    
+    /* Hide "Made with Streamlit" footer */
+    .css-1dp5vir {{display: none;}}
+    .css-164nlkn {{display: none;}}
+    footer {{display: none !important;}}
+    .viewerBadge_link__1S137 {{display: none !important;}}
+    .viewerBadge_container__1QSob {{display: none !important;}}
+    
+    /* Hide hamburger menu and settings */
+    button[title="View fullscreen"] {{display: none;}}
+    button[kind="header"] {{display: none;}}
+    [data-testid="stToolbar"] {{display: none !important;}}
+    [data-testid="stDecoration"] {{display: none !important;}}
+    [data-testid="stStatusWidget"] {{display: none !important;}}
+    
+    /* Hide deploy button and app menu */
+    .css-18e3th9 {{display: none;}}
+    .css-1dp5vir {{display: none;}}
+    
+    /* Hide profile/avatar icon */
+    [data-testid="manage-app-button"] {{display: none;}}
+    
+    /* Remove top padding caused by hidden header */
+    .block-container {{
+        padding-top: 2rem !important;
+    }}
+    
+    /* Hide hosting message if present */
+    [data-testid="stAppViewBlockContainer"] > div:first-child {{
+        display: none;
+    }}
+    
+    /* ============================================
+       STORM BRAND STYLES
+       ============================================ */
+    
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
+    
+    /* Global Styles */
     * {{
-        -webkit-tap-highlight-color: transparent;
-        font-family: 'Inter', sans-serif;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+        font-family: 'Montserrat', sans-serif;
     }}
-
-    /* COMPLETE BACKGROUND CONTROL */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], 
-    .stApp, .main, [class*="appview"], section[tabindex="0"] {{
-        background-color: {DEEP_BG} !important;
-        background-image: 
-            radial-gradient(circle at 50% -20%, {MID_BG} 0%, transparent 70%),
-            radial-gradient(circle at 0% 100%, {MID_BG} 0%, transparent 40%) !important;
-        color: #ffffff !important;
-        overflow-x: hidden;
+    
+    /* Background & Body */
+    .stApp {{
+        background: linear-gradient(180deg, {DEEP_BG} 0%, {MID_BG} 50%, {DEEP_BG} 100%);
+        color: #FFFFFF;
     }}
-
-    /* NUCLEAR OPTION - HIDE ALL STREAMLIT UI ELEMENTS */
-    #MainMenu, header, footer, 
-    .stDeployButton, .stAppDeployButton, .reportview-container,
-    [data-testid="stToolbar"], 
-    [data-testid="stDecoration"], 
-    [data-testid="stStatusWidget"],
-    [data-testid="stHeader"],
-    [data-testid="stToolbarActions"],
-    [data-testid="stActionButtonIcon"],
-    [data-testid="collapsedControl"],
-    .css-18e3th9, .css-1d391kg,
-    div[data-testid="stSidebarNav"],
-    button[kind="header"],
-    [class*="viewerBadge"],
-    [data-testid="stAppViewBlockContainer"] > div:first-child,
-    section[data-testid="stSidebar"] > div:first-child,
-    .styles_viewerBadge__1yB5_,
-    [data-testid="stException"],
-    [data-testid="stNotification"],
-    div.element-container:has(> div.stAlert),
-    div[data-testid="stFileUploadDropzone"],
-    button[title="View fullscreen"],
-    [data-testid="baseButton-header"],
-    [data-testid="baseButton-headerNoPadding"],
-    .stChatFloatingInputContainer {{
-        visibility: hidden !important;
-        display: none !important;
-        height: 0 !important;
-        width: 0 !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }}
-
-    /* AGGRESSIVE PADDING OVERRIDE */
-    .block-container, [data-testid="block-container"] {{
-        padding: 2rem 1.5rem 8rem 1.5rem !important;
-        max-width: 900px !important;
-        background: transparent !important;
-        margin: 0 auto !important;
-    }}
-
-    /* MOBILE SAFE AREA SUPPORT */
-    @supports (padding: max(0px)) {{
-        .block-container {{
-            padding: max(2rem, env(safe-area-inset-top)) 
-                     max(1.5rem, env(safe-area-inset-right)) 
-                     max(8rem, env(safe-area-inset-bottom)) 
-                     max(1.5rem, env(safe-area-inset-left)) !important;
-        }}
-    }}
-
-    /* PREMIUM HEADER SYSTEM */
+    
+    /* Hide default Streamlit elements */
+    .css-1v0mbdj {{display: none;}}
+    
+    /* ============================================
+       STORM HEADER
+       ============================================ */
     .storm-header-container {{
-        position: relative;
-        padding: 3.5rem 1.5rem;
-        margin-bottom: 2.5rem;
-        background: linear-gradient(145deg, {MID_BG} 0%, {DEEP_BG} 100%);
-        border: 2px solid {PRIMARY_GREEN}33;
-        border-radius: 40px;
         text-align: center;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-        overflow: hidden;
+        padding: 3rem 1rem 2rem 1rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
+        border-radius: 30px;
+        border: 3px solid {PRIMARY_GREEN}22;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 80px {ACCENT_GLOW};
     }}
-
-    .storm-header-container::after {{
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: radial-gradient(circle at 50% 50%, {PRIMARY_GREEN}05, transparent 70%);
-        pointer-events: none;
-    }}
-
+    
     .logo-outer-frame {{
         display: inline-block;
-        padding: 10px;
-        background: {DEEP_BG};
-        border: 3px solid {PRIMARY_GREEN};
-        border-radius: 30px;
-        box-shadow: 0 0 40px {PRIMARY_GREEN}33;
+        padding: 8px;
+        background: linear-gradient(135deg, {PRIMARY_GREEN}44 0%, {SECONDARY_GREEN}22 100%);
+        border-radius: 50%;
         margin-bottom: 1.5rem;
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 32px {ACCENT_GLOW};
+        animation: logo-pulse 3s ease-in-out infinite;
     }}
-
-    .logo-outer-frame:hover {{
-        transform: scale(1.05) translateY(-5px);
-        box-shadow: 0 0 60px {PRIMARY_GREEN}55;
+    
+    @keyframes logo-pulse {{
+        0%, 100% {{ transform: scale(1); box-shadow: 0 8px 32px {ACCENT_GLOW}; }}
+        50% {{ transform: scale(1.05); box-shadow: 0 12px 48px {ACCENT_GLOW}; }}
     }}
-
+    
     .logo-outer-frame img {{
-        width: 180px;
-        height: 180px;
-        border-radius: 20px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
         object-fit: cover;
-        display: block;
+        border: 4px solid {PRIMARY_GREEN};
     }}
-
+    
     .main-title {{
-        font-size: clamp(3rem, 10vw, 5rem);
-        font-weight: 800;
-        letter-spacing: -0.04em;
+        font-size: 4rem;
+        font-weight: 900;
         color: {PRIMARY_GREEN};
-        margin: 0;
-        line-height: 0.9;
-        text-transform: uppercase;
-        filter: drop-shadow(0 0 20px {PRIMARY_GREEN}44);
+        margin: 0.5rem 0;
+        letter-spacing: 0.3em;
+        text-shadow: 0 0 40px {ACCENT_GLOW}, 0 0 80px {ACCENT_GLOW};
+        animation: title-glow 2s ease-in-out infinite;
     }}
-
+    
+    @keyframes title-glow {{
+        0%, 100% {{ text-shadow: 0 0 40px {ACCENT_GLOW}, 0 0 80px {ACCENT_GLOW}; }}
+        50% {{ text-shadow: 0 0 60px {ACCENT_GLOW}, 0 0 120px {ACCENT_GLOW}; }}
+    }}
+    
     .sub-title {{
-        font-size: 1rem;
-        color: {SECONDARY_GREEN};
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
         font-weight: 600;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.15em;
         text-transform: uppercase;
-        margin-top: 1.25rem;
-        opacity: 0.85;
     }}
-
-    /* Enhanced chatbot icon with static positioning */
-    .chatbot-icon {{
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid {PRIMARY_GREEN};
-        box-shadow: 0 0 25px {PRIMARY_GREEN}44;
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 1rem;
-        transition: all 0.3s ease;
-    }}
-
-    .chatbot-icon:hover {{
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 0 40px {PRIMARY_GREEN}77;
-    }}
-
-    .chatbot-icon-small {{
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid {PRIMARY_GREEN};
-        box-shadow: 0 0 15px {PRIMARY_GREEN}33;
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 0.75rem;
-    }}
-
-    /* Greeting section with Hi I'm Storm */
+    
+    /* ============================================
+       GREETING SECTION WITH CHATBOT
+       ============================================ */
     .greeting-section {{
         background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
-        border: 2px solid {PRIMARY_GREEN}44;
-        border-radius: 35px;
-        padding: 2.5rem;
-        margin: 2.5rem 0;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        border: 2px solid {PRIMARY_GREEN}33;
+        border-radius: 25px;
+        padding: 3rem 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }}
-
-    .greeting-section::before {{
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, {PRIMARY_GREEN}08, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }}
-
-    @keyframes rotate {{
-        from {{ transform: rotate(0deg); }}
-        to {{ transform: rotate(360deg); }}
-    }}
-
+    
     .greeting-text {{
-        position: relative;
-        z-index: 2;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
     }}
-
+    
     .greeting-text h2 {{
         color: {PRIMARY_GREEN};
         font-size: 2.5rem;
         font-weight: 800;
         margin: 0;
-        text-shadow: 0 0 30px {PRIMARY_GREEN}66;
-    }}
-
-    /* Enhanced tabs styling */
-    .stTabs [data-baseweb="tab-list"] {{
-        gap: 1rem;
-        background-color: {MID_BG};
-        padding: 1rem;
-        border-radius: 25px;
-        border: 2px solid {PRIMARY_GREEN}22;
-    }}
-
-    .stTabs [data-baseweb="tab"] {{
-        background-color: transparent;
-        border-radius: 15px;
-        color: rgba(255,255,255,0.6);
-        font-weight: 700;
-        padding: 1rem 2rem;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-    }}
-
-    .stTabs [data-baseweb="tab"]:hover {{
-        background-color: {PRIMARY_GREEN}11;
-        color: {PRIMARY_GREEN};
-    }}
-
-    .stTabs [aria-selected="true"] {{
-        background: linear-gradient(135deg, {PRIMARY_GREEN}22, {SECONDARY_GREEN}11) !important;
-        border: 2px solid {PRIMARY_GREEN} !important;
-        color: {PRIMARY_GREEN} !important;
-        box-shadow: 0 5px 20px {PRIMARY_GREEN}22;
-    }}
-
-    .stTabs [data-baseweb="tab-panel"] {{
-        padding-top: 2rem;
-    }}
-
-    /* INFO SECTIONS */
-    .info-section {{
-        background: {MID_BG};
-        border: 1px solid {PRIMARY_GREEN}22;
-        border-radius: 25px;
-        padding: 2rem;
-        margin: 2rem 0;
-        position: relative;
-        overflow: hidden;
-    }}
-
-    .info-section::before {{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: linear-gradient(180deg, {PRIMARY_GREEN}, {SECONDARY_GREEN});
-    }}
-
-    .info-section h3 {{
-        color: {PRIMARY_GREEN};
-        font-size: 1.4rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
         letter-spacing: 0.05em;
     }}
-
-    .info-section p {{
-        color: rgba(255,255,255,0.85);
-        line-height: 1.8;
-        margin-bottom: 1rem;
+    
+    .chatbot-icon {{
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 3px solid {PRIMARY_GREEN};
+        box-shadow: 0 0 30px {ACCENT_GLOW};
+        animation: icon-float 3s ease-in-out infinite;
     }}
-
+    
+    @keyframes icon-float {{
+        0%, 100% {{ transform: translateY(0px); }}
+        50% {{ transform: translateY(-10px); }}
+    }}
+    
+    .chatbot-icon-small {{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid {PRIMARY_GREEN};
+        box-shadow: 0 0 20px {ACCENT_GLOW};
+        animation: icon-float 3s ease-in-out infinite;
+    }}
+    
+    /* ============================================
+       INFO SECTION
+       ============================================ */
+    .info-section {{
+        background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
+        border-left: 5px solid {PRIMARY_GREEN};
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }}
+    
+    .info-section h3 {{
+        color: {PRIMARY_GREEN};
+        font-weight: 800;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }}
+    
     .info-section ul {{
         list-style: none;
         padding: 0;
     }}
-
+    
     .info-section li {{
-        color: rgba(255,255,255,0.85);
         padding: 0.75rem 0;
-        padding-left: 1.5rem;
-        position: relative;
-        line-height: 1.6;
+        color: rgba(255,255,255,0.9);
+        line-height: 1.7;
+        border-bottom: 1px solid {PRIMARY_GREEN}11;
     }}
-
-    .info-section li::before {{
-        content: '▸';
-        position: absolute;
-        left: 0;
+    
+    .info-section li:last-child {{
+        border-bottom: none;
+    }}
+    
+    .info-section strong {{
         color: {PRIMARY_GREEN};
-        font-weight: bold;
+        font-weight: 700;
     }}
-
-    /* Enhanced feature cards */
+    
+    /* ============================================
+       FEATURE CARDS
+       ============================================ */
     .feature-card {{
-        background: linear-gradient(135deg, {MID_BG}dd 0%, {DEEP_BG}dd 100%);
+        background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
         border: 2px solid {PRIMARY_GREEN}22;
-        border-radius: 25px;
+        border-radius: 20px;
         padding: 2rem;
         margin: 1.5rem 0;
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }}
-
+    
     .feature-card:hover {{
-        border-color: {PRIMARY_GREEN}66;
         transform: translateY(-5px);
-        box-shadow: 0 15px 40px {PRIMARY_GREEN}22;
+        border-color: {PRIMARY_GREEN}55;
+        box-shadow: 0 12px 40px {ACCENT_GLOW};
     }}
-
-    .feature-card::after {{
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100px;
-        height: 100px;
-        background: radial-gradient(circle, {PRIMARY_GREEN}11, transparent);
-        border-radius: 0 0 0 100%;
-    }}
-
+    
     .feature-header {{
         display: flex;
         align-items: center;
         gap: 1rem;
         margin-bottom: 1rem;
     }}
-
+    
     .feature-icon {{
         font-size: 2.5rem;
-        filter: drop-shadow(0 0 15px {PRIMARY_GREEN}44);
+        min-width: 60px;
+        text-align: center;
     }}
-
+    
     .feature-title {{
         color: {PRIMARY_GREEN};
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         font-weight: 800;
         margin: 0;
+        letter-spacing: 0.05em;
     }}
-
+    
     .feature-description {{
-        color: rgba(255,255,255,0.8);
+        color: rgba(255,255,255,0.85);
         line-height: 1.7;
-        padding-left: 0.5rem;
+        font-size: 1rem;
+        margin: 0;
     }}
-
-    /* CHAT INTERFACE - PREMIUM BUBBLES */
-    [data-testid="stChatMessageContainer"] {{
-        gap: 2rem !important;
-        padding-bottom: 2rem !important;
+    
+    /* ============================================
+       TABS STYLING
+       ============================================ */
+    .stTabs [data-baseweb="tab-list"] {{
+        gap: 1rem;
+        background-color: {MID_BG};
+        border-radius: 15px;
+        padding: 0.5rem;
     }}
-
+    
+    .stTabs [data-baseweb="tab"] {{
+        background-color: transparent;
+        border-radius: 10px;
+        color: rgba(255,255,255,0.6);
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 1rem 1.5rem;
+        border: 2px solid transparent;
+    }}
+    
+    .stTabs [data-baseweb="tab"]:hover {{
+        background-color: {PRIMARY_GREEN}11;
+        color: {PRIMARY_GREEN};
+    }}
+    
+    .stTabs [aria-selected="true"] {{
+        background-color: {PRIMARY_GREEN}22;
+        color: {PRIMARY_GREEN};
+        border-color: {PRIMARY_GREEN}55;
+    }}
+    
+    /* ============================================
+       CHAT INTERFACE
+       ============================================ */
     .stChatMessage {{
-        background: transparent !important;
-        border: none !important;
+        background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
+        border: 1px solid {PRIMARY_GREEN}22;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
     }}
-
-    /* User Message Bubble */
-    [data-testid="stChatMessage"][data-testid*="user"] > div,
-    .stChatMessage[class*="user"] > div {{
-        background: {MID_BG} !important;
-        border: 1px solid {SECONDARY_GREEN}33 !important;
-        border-radius: 28px 28px 4px 28px !important;
-        padding: 1.5rem !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
-        color: #ffffff !important;
+    
+    .stChatMessage[data-testid="user-message"] {{
+        border-left: 4px solid {SECONDARY_GREEN};
     }}
-
-    /* Assistant Message Bubble */
-    [data-testid="stChatMessage"][data-testid*="assistant"] > div,
-    .stChatMessage[class*="assistant"] > div {{
-        background: linear-gradient(165deg, {MID_BG} 0%, {DEEP_BG} 100%) !important;
-        border: 1px solid {PRIMARY_GREEN}55 !important;
-        border-radius: 28px 28px 28px 4px !important;
-        padding: 1.75rem !important;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4) !important;
-        position: relative;
+    
+    .stChatMessage[data-testid="assistant-message"] {{
+        border-left: 4px solid {PRIMARY_GREEN};
     }}
-
-    /* Assistant Label Badge */
-    [data-testid="stChatMessage"][data-testid*="assistant"]::before,
-    .stChatMessage[class*="assistant"]::before {{
-        content: 'STORM';
-        position: absolute;
-        top: -12px;
-        left: 30px;
-        background: {PRIMARY_GREEN};
+    
+    /* ============================================
+       INPUT & BUTTONS
+       ============================================ */
+    .stTextInput > div > div > input {{
+        background-color: {MID_BG};
+        color: #FFFFFF;
+        border: 2px solid {PRIMARY_GREEN}33;
+        border-radius: 15px;
+        padding: 1rem;
+        font-size: 1rem;
+    }}
+    
+    .stTextInput > div > div > input:focus {{
+        border-color: {PRIMARY_GREEN};
+        box-shadow: 0 0 20px {ACCENT_GLOW};
+    }}
+    
+    .stButton > button {{
+        background: linear-gradient(135deg, {PRIMARY_GREEN} 0%, {SECONDARY_GREEN} 100%);
         color: {DEEP_BG};
-        font-size: 0.7rem;
-        font-weight: 900;
-        padding: 3px 12px;
-        border-radius: 6px;
-        letter-spacing: 0.15em;
-        z-index: 10;
-    }}
-
-    /* INPUT SYSTEM - FIXED TO BOTTOM */
-    [data-testid="stChatInput"],
-    [data-testid="stChatInputContainer"],
-    .stChatFloatingInputContainer {{
-        display: block !important;
-        visibility: visible !important;
-        background: {DEEP_BG} !important;
-        border-top: 2px solid {PRIMARY_GREEN}11 !important;
-        padding: 1.5rem !important;
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 1000 !important;
-        backdrop-filter: blur(15px);
-    }}
-
-    [data-testid="stChatInput"] textarea,
-    .stChatInput textarea {{
-        background: {MID_BG} !important;
-        color: #ffffff !important;
-        border: 2px solid {PRIMARY_GREEN} !important;
-        border-radius: 20px !important;
-        font-size: 1.1rem !important;
-        padding: 15px 20px !important;
-        transition: all 0.3s ease !important;
-    }}
-
-    [data-testid="stChatInput"] textarea:focus,
-    .stChatInput textarea:focus {{
-        box-shadow: 0 0 30px {PRIMARY_GREEN}22 !important;
-        border-color: {SECONDARY_GREEN} !important;
-        outline: none !important;
-    }}
-
-    /* BUTTONS - APEX STYLE */
-    .stButton button,
-    button[kind="primary"],
-    button[kind="secondary"] {{
-        background: linear-gradient(135deg, {PRIMARY_GREEN} 0%, {SECONDARY_GREEN} 100%) !important;
-        color: {DEEP_BG} !important;
-        font-weight: 800 !important;
-        border-radius: 20px !important;
-        border: none !important;
-        padding: 1rem 2.5rem !important;
+        font-weight: 800;
+        border: none;
+        border-radius: 15px;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-        box-shadow: 0 12px 30px {PRIMARY_GREEN}33 !important;
-        width: 100% !important;
-    }}
-
-    .stButton button:hover,
-    button[kind="primary"]:hover {{
-        transform: translateY(-4px);
-        box-shadow: 0 20px 45px {PRIMARY_GREEN}55 !important;
-        filter: brightness(1.1);
-    }}
-
-    /* SCROLLBAR CUSTOMIZATION */
-    ::-webkit-scrollbar {{ 
-        width: 10px; 
-        height: 10px;
+        letter-spacing: 0.1em;
+        transition: all 0.3s ease;
     }}
     
-    ::-webkit-scrollbar-track {{ 
-        background: {DEEP_BG}; 
+    .stButton > button:hover {{
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px {ACCENT_GLOW};
     }}
     
-    ::-webkit-scrollbar-thumb {{ 
-        background: linear-gradient({PRIMARY_GREEN}44, {SECONDARY_GREEN}44); 
-        border-radius: 10px; 
+    .stDownloadButton > button {{
+        background: linear-gradient(135deg, {SECONDARY_GREEN} 0%, {PRIMARY_GREEN} 100%);
+        color: {DEEP_BG};
+        font-weight: 700;
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
     }}
     
-    ::-webkit-scrollbar-thumb:hover {{ 
-        background: {PRIMARY_GREEN}; 
+    /* ============================================
+       EXPANDER STYLING
+       ============================================ */
+    .streamlit-expanderHeader {{
+        background-color: {MID_BG};
+        color: {PRIMARY_GREEN};
+        border: 2px solid {PRIMARY_GREEN}33;
+        border-radius: 12px;
+        font-weight: 700;
     }}
-
-    /* ANIMATIONS */
-    @keyframes entryFade {{
-        from {{ 
-            opacity: 0; 
-            transform: translateY(30px); 
-        }}
-        to {{ 
-            opacity: 1; 
-            transform: translateY(0); 
-        }}
+    
+    .streamlit-expanderHeader:hover {{
+        background-color: {PRIMARY_GREEN}11;
+        border-color: {PRIMARY_GREEN}55;
     }}
-
-    .stChatMessage {{
-        animation: entryFade 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    
+    /* ============================================
+       SCROLLBAR STYLING
+       ============================================ */
+    ::-webkit-scrollbar {{
+        width: 12px;
     }}
-
-    /* TEXT AND MARKDOWN STYLING */
-    p, span, div {{
-        color: #ffffff !important;
+    
+    ::-webkit-scrollbar-track {{
+        background: {DEEP_BG};
     }}
-
-    code {{
-        background: {MID_BG} !important;
-        color: {PRIMARY_GREEN} !important;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'JetBrains Mono', monospace;
+    
+    ::-webkit-scrollbar-thumb {{
+        background: {PRIMARY_GREEN}55;
+        border-radius: 6px;
     }}
-
-    /* RESPONSIVE ADJUSTMENTS */
+    
+    ::-webkit-scrollbar-thumb:hover {{
+        background: {PRIMARY_GREEN};
+    }}
+    
+    /* ============================================
+       MOBILE RESPONSIVE
+       ============================================ */
     @media (max-width: 768px) {{
-        .storm-header-container {{
-            padding: 2rem 1rem;
-            border-radius: 30px;
+        .main-title {{
+            font-size: 2.5rem;
+            letter-spacing: 0.2em;
         }}
         
         .logo-outer-frame img {{
-            width: 140px;
-            height: 140px;
+            width: 80px;
+            height: 80px;
         }}
         
-        .main-title {{
-            font-size: 2.5rem;
-        }}
-
         .chatbot-icon {{
             width: 60px;
             height: 60px;
         }}
-
+        
         .greeting-text h2 {{
             font-size: 1.8rem;
+        }}
+        
+        .feature-card {{
+            padding: 1.5rem;
         }}
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # ======================================================
 # 5. UTILITY FUNCTIONS
@@ -633,6 +506,71 @@ def count_message_stats() -> Dict[str, int]:
         "user": user_msgs,
         "assistant": assistant_msgs
     }
+
+def export_conversation_json():
+    """Export conversation to JSON format."""
+    export_data = {
+        "session_id": st.session_state.get("session_id", "unknown"),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "stats": count_message_stats(),
+        "conversation": st.session_state.messages
+    }
+    return json.dumps(export_data, indent=2)
+
+def export_conversation_text():
+    """Export conversation to plain text format."""
+    lines = []
+    lines.append("=" * 60)
+    lines.append("STORM CONVERSATION EXPORT")
+    lines.append(f"Exported: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    lines.append("=" * 60)
+    lines.append("")
+    
+    for msg in st.session_state.messages:
+        role = "YOU" if msg["role"] == "user" else "STORM"
+        lines.append(f"[{role}]")
+        lines.append(msg["content"])
+        lines.append("")
+        lines.append("-" * 60)
+        lines.append("")
+    
+    stats = count_message_stats()
+    lines.append("STATISTICS")
+    lines.append(f"Total Messages: {stats['total']}")
+    lines.append(f"Your Messages: {stats['user']}")
+    lines.append(f"Storm Responses: {stats['assistant']}")
+    lines.append("=" * 60)
+    
+    return "\n".join(lines)
+
+def export_conversation_markdown():
+    """Export conversation to markdown format."""
+    lines = []
+    lines.append("# 🐺 Storm Conversation Export")
+    lines.append(f"**Exported:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+    
+    for msg in st.session_state.messages:
+        if msg["role"] == "user":
+            lines.append(f"### 👤 You")
+            lines.append(msg["content"])
+        else:
+            lines.append(f"### 🐺 Storm")
+            lines.append(msg["content"])
+        lines.append("")
+    
+    lines.append("---")
+    lines.append("")
+    stats = count_message_stats()
+    lines.append("## 📊 Statistics")
+    lines.append(f"- **Total Messages:** {stats['total']}")
+    lines.append(f"- **Your Messages:** {stats['user']}")
+    lines.append(f"- **Storm Responses:** {stats['assistant']}")
+    
+    return "\n".join(lines)
+
 
 # ======================================================
 # 6. UI COMPONENT RENDERING
@@ -676,6 +614,91 @@ def render_greeting_section():
         unsafe_allow_html=True
     )
 
+def render_stats_dashboard():
+    """Render conversation statistics dashboard."""
+    stats = count_message_stats()
+    
+    st.markdown(
+        f"""
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+            <div style="background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%); border: 2px solid {PRIMARY_GREEN}33; border-radius: 20px; padding: 1.5rem; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 800; color: {PRIMARY_GREEN};">{stats['total']}</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem;">Total Messages</div>
+            </div>
+            <div style="background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%); border: 2px solid {PRIMARY_GREEN}33; border-radius: 20px; padding: 1.5rem; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 800; color: {SECONDARY_GREEN};">{stats['user']}</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem;">Your Questions</div>
+            </div>
+            <div style="background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%); border: 2px solid {PRIMARY_GREEN}33; border-radius: 20px; padding: 1.5rem; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 800; color: {PRIMARY_GREEN};">{stats['assistant']}</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem;">Storm Responses</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+def render_chat_insights():
+    """Render insights about the current conversation."""
+    stats = count_message_stats()
+    
+    if stats['total'] > 1:
+        insights = []
+        
+        if stats['user'] >= 5:
+            insights.append("💬 You're having a detailed conversation with Storm")
+        if stats['total'] >= 10:
+            insights.append("🔥 This is turning into a productive session")
+        if stats['user'] >= 10:
+            insights.append("🎯 You're really diving deep into real estate strategies")
+        
+        if insights:
+            st.markdown(
+                f"""
+                <div style="background: {MID_BG}; border-left: 4px solid {PRIMARY_GREEN}; border-radius: 15px; padding: 1.5rem; margin: 2rem 0;">
+                    <div style="color: {PRIMARY_GREEN}; font-weight: 800; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">Session Insights</div>
+                    <div style="color: rgba(255,255,255,0.85); line-height: 1.8;">
+                        {"<br>".join(insights)}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+def render_conversation_topics():
+    """Analyze and display conversation topics."""
+    if len(st.session_state.messages) > 1:
+        # Extract keywords from user messages
+        user_messages = [msg["content"].lower() for msg in st.session_state.messages if msg["role"] == "user"]
+        all_text = " ".join(user_messages)
+        
+        topics_found = []
+        topic_keywords = {
+            "Tax Deeds": ["tax deed", "auction", "bidding", "county auction"],
+            "Tax Liens": ["tax lien", "lien", "redemption", "interest rate"],
+            "Wholesale": ["wholesale", "assignment", "arv", "spread"],
+            "Creative Finance": ["seller financing", "lease option", "subject-to", "creative finance"],
+            "ROI Analysis": ["roi", "return", "profit", "cash flow"],
+            "Due Diligence": ["due diligence", "title", "research", "inspection"],
+        }
+        
+        for topic, keywords in topic_keywords.items():
+            if any(keyword in all_text for keyword in keywords):
+                topics_found.append(topic)
+        
+        if topics_found:
+            st.markdown(
+                f"""
+                <div style="margin: 2rem 0;">
+                    <div style="color: {PRIMARY_GREEN}; font-weight: 800; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">Topics Discussed</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                        {"".join([f'<span style="background: {PRIMARY_GREEN}22; border: 1px solid {PRIMARY_GREEN}44; color: {PRIMARY_GREEN}; padding: 0.5rem 1rem; border-radius: 15px; font-size: 0.85rem; font-weight: 600;">{topic}</span>' for topic in topics_found])}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
 def render_expertise_section():
     """Render the expertise information section."""
     st.markdown(
@@ -702,6 +725,7 @@ def render_expertise_section():
         """,
         unsafe_allow_html=True
     )
+
 
 def render_feature_cards():
     """Render detailed feature cards."""
@@ -858,6 +882,210 @@ def render_example_prompts_tab():
                 st.session_state.example_query = example['query']
                 st.rerun()
 
+def render_export_tab():
+    """Render the export and conversation management tab."""
+    st.markdown(
+        f"""
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <img src="{CHATBOT_ICON_DATA}" alt="Storm" class="chatbot-icon-small">
+                <h2 style="color: {PRIMARY_GREEN}; font-size: 2rem; font-weight: 800; margin: 0;">Export & Manage</h2>
+            </div>
+            <p style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Save your conversations, analyze insights, and manage your Storm sessions</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    stats = count_message_stats()
+    
+    # Statistics Overview
+    st.markdown(
+        f"""
+        <div style="background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%); border: 2px solid {PRIMARY_GREEN}33; border-radius: 25px; padding: 2rem; margin: 2rem 0;">
+            <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; margin-bottom: 1.5rem; text-align: center;">CURRENT SESSION STATISTICS</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem;">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: {PRIMARY_GREEN};">{stats['total']}</div>
+                    <div style="color: rgba(255,255,255,0.6); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em;">Total Messages</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: {SECONDARY_GREEN};">{stats['user']}</div>
+                    <div style="color: rgba(255,255,255,0.6); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em;">Your Questions</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 900; color: {PRIMARY_GREEN};">{stats['assistant']}</div>
+                    <div style="color: rgba(255,255,255,0.6); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em;">Storm Responses</div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Export Options
+    st.markdown(
+        f"""
+        <div style="margin: 3rem 0 2rem 0;">
+            <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em;">📥 Export Options</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Download your conversation in multiple formats for your records</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown(
+            f"""
+            <div style="background: {MID_BG}; border: 2px solid {PRIMARY_GREEN}22; border-radius: 20px; padding: 1.5rem; text-align: center; margin-bottom: 1rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📄</div>
+                <div style="color: {PRIMARY_GREEN}; font-weight: 700; margin-bottom: 0.5rem;">Plain Text</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Simple readable format</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        if st.button("Download TXT", key="export_txt", use_container_width=True):
+            txt_content = export_conversation_text()
+            st.download_button(
+                label="💾 Save Text File",
+                data=txt_content,
+                file_name=f"storm_conversation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                mime="text/plain",
+                use_container_width=True
+            )
+    
+    with col2:
+        st.markdown(
+            f"""
+            <div style="background: {MID_BG}; border: 2px solid {PRIMARY_GREEN}22; border-radius: 20px; padding: 1.5rem; text-align: center; margin-bottom: 1rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📝</div>
+                <div style="color: {PRIMARY_GREEN}; font-weight: 700; margin-bottom: 0.5rem;">Markdown</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Formatted document</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        if st.button("Download MD", key="export_md", use_container_width=True):
+            md_content = export_conversation_markdown()
+            st.download_button(
+                label="💾 Save Markdown File",
+                data=md_content,
+                file_name=f"storm_conversation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+    
+    with col3:
+        st.markdown(
+            f"""
+            <div style="background: {MID_BG}; border: 2px solid {PRIMARY_GREEN}22; border-radius: 20px; padding: 1.5rem; text-align: center; margin-bottom: 1rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🗂️</div>
+                <div style="color: {PRIMARY_GREEN}; font-weight: 700; margin-bottom: 0.5rem;">JSON</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Structured data</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        if st.button("Download JSON", key="export_json", use_container_width=True):
+            json_content = export_conversation_json()
+            st.download_button(
+                label="💾 Save JSON File",
+                data=json_content,
+                file_name=f"storm_conversation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                mime="application/json",
+                use_container_width=True
+            )
+    
+    # Conversation Preview
+    if stats['total'] > 1:
+        st.markdown(
+            f"""
+            <div style="margin: 3rem 0 2rem 0;">
+                <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em;">👁️ Conversation Preview</h3>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Review your conversation before exporting</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+        with st.expander("📖 View Full Conversation", expanded=False):
+            for idx, msg in enumerate(st.session_state.messages):
+                role_label = "YOU" if msg["role"] == "user" else "STORM"
+                role_color = SECONDARY_GREEN if msg["role"] == "user" else PRIMARY_GREEN
+                
+                st.markdown(
+                    f"""
+                    <div style="background: {MID_BG}; border-left: 4px solid {role_color}; border-radius: 12px; padding: 1.5rem; margin: 1rem 0;">
+                        <div style="color: {role_color}; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">{role_label} • Message {idx + 1}</div>
+                        <div style="color: rgba(255,255,255,0.9); line-height: 1.7;">{msg['content']}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+    
+    # Conversation Analysis
+    st.markdown(
+        f"""
+        <div style="margin: 3rem 0 2rem 0;">
+            <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em;">📊 Conversation Analysis</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Insights about your discussion with Storm</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    render_conversation_topics()
+    render_chat_insights()
+    
+    # Session Management
+    st.markdown(
+        f"""
+        <div style="margin: 3rem 0 2rem 0;">
+            <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em;">⚙️ Session Management</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Control your Storm session</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("🔄 Reset Conversation", key="reset_export_tab", use_container_width=True):
+            st.session_state.messages = [
+                {
+                    "role": "assistant", 
+                    "content": "🐺 **Conversation Reset**\n\nReady to analyze your next deal. What are we working on?"
+                }
+            ]
+            st.rerun()
+    
+    with col2:
+        if st.button("🚀 New Session", key="new_session_export_tab", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+    
+    # Session Info
+    if "session_start_time" not in st.session_state:
+        st.session_state.session_start_time = datetime.now()
+    
+    session_duration = datetime.now() - st.session_state.session_start_time
+    minutes = int(session_duration.total_seconds() / 60)
+    
+    st.markdown(
+        f"""
+        <div style="background: {MID_BG}; border: 1px solid {PRIMARY_GREEN}22; border-radius: 15px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
+            <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Session Duration</div>
+            <div style="color: {PRIMARY_GREEN}; font-size: 1.5rem; font-weight: 800;">{minutes} minutes</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 # ======================================================
 # 7. MAIN APPLICATION ENGINE
 # ======================================================
@@ -880,7 +1108,10 @@ if "messages" not in st.session_state:
 if "example_query" not in st.session_state:
     st.session_state.example_query = None
 
-tab1, tab2, tab3 = st.tabs(["💬 Chat with Storm", "📚 Features & Capabilities", "💡 Example Questions"])
+if "session_start_time" not in st.session_state:
+    st.session_state.session_start_time = datetime.now()
+
+tab1, tab2, tab3, tab4 = st.tabs(["💬 Chat with Storm", "📊 Export & Analytics", "📚 Features & Capabilities", "💡 Example Questions"])
 
 with tab1:
     st.markdown(
@@ -895,10 +1126,17 @@ with tab1:
         unsafe_allow_html=True
     )
     
+    if len(st.session_state.messages) > 1:
+        render_stats_dashboard()
+        render_conversation_topics()
+    
     # Display chat history
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
+    
+    if len(st.session_state.messages) > 5:
+        render_chat_insights()
     
     # Handle example query injection
     if st.session_state.example_query:
@@ -976,6 +1214,9 @@ with tab1:
             st.rerun()
 
 with tab2:
+    render_export_tab()
+
+with tab3:
     render_expertise_section()
     
     st.markdown(
@@ -989,7 +1230,7 @@ with tab2:
     )
     render_feature_cards()
 
-with tab3:
+with tab4:
     render_example_prompts_tab()
 
 # Footer
