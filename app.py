@@ -58,6 +58,7 @@ def get_base64_image(image_filename):
 LOGO_DATA = get_base64_image("logo(1).jpeg")
 CHATBOT_ICON_DATA = get_base64_image("IMG_1100.png")
 
+
 # ======================================================
 # 4. ABSOLUTE STREAMLIT HIDING CSS ENGINE
 # ======================================================
@@ -208,7 +209,7 @@ st.markdown(
         opacity: 0.85;
     }}
 
-    /* Added chatbot icon styles */
+    /* Enhanced chatbot icon with static positioning */
     .chatbot-icon {{
         width: 80px;
         height: 80px;
@@ -239,6 +240,7 @@ st.markdown(
         margin-right: 0.75rem;
     }}
 
+    /* Greeting section with Hi I'm Storm */
     .greeting-section {{
         background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
         border: 2px solid {PRIMARY_GREEN}44;
@@ -284,34 +286,39 @@ st.markdown(
         text-shadow: 0 0 30px {PRIMARY_GREEN}66;
     }}
 
-    /* STAT CARDS */
-    .stat-card {{
-        background: linear-gradient(135deg, {MID_BG} 0%, {DEEP_BG} 100%);
-        border: 1px solid {PRIMARY_GREEN}33;
-        border-radius: 20px;
-        padding: 1.5rem;
-        text-align: center;
+    /* Enhanced tabs styling */
+    .stTabs [data-baseweb="tab-list"] {{
+        gap: 1rem;
+        background-color: {MID_BG};
+        padding: 1rem;
+        border-radius: 25px;
+        border: 2px solid {PRIMARY_GREEN}22;
+    }}
+
+    .stTabs [data-baseweb="tab"] {{
+        background-color: transparent;
+        border-radius: 15px;
+        color: rgba(255,255,255,0.6);
+        font-weight: 700;
+        padding: 1rem 2rem;
+        border: 2px solid transparent;
         transition: all 0.3s ease;
     }}
 
-    .stat-card:hover {{
-        border-color: {PRIMARY_GREEN};
-        box-shadow: 0 10px 30px {PRIMARY_GREEN}22;
-        transform: translateY(-3px);
-    }}
-
-    .stat-number {{
-        font-size: 2rem;
-        font-weight: 800;
+    .stTabs [data-baseweb="tab"]:hover {{
+        background-color: {PRIMARY_GREEN}11;
         color: {PRIMARY_GREEN};
-        margin-bottom: 0.5rem;
     }}
 
-    .stat-label {{
-        font-size: 0.85rem;
-        color: rgba(255,255,255,0.6);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
+    .stTabs [aria-selected="true"] {{
+        background: linear-gradient(135deg, {PRIMARY_GREEN}22, {SECONDARY_GREEN}11) !important;
+        border: 2px solid {PRIMARY_GREEN} !important;
+        color: {PRIMARY_GREEN} !important;
+        box-shadow: 0 5px 20px {PRIMARY_GREEN}22;
+    }}
+
+    .stTabs [data-baseweb="tab-panel"] {{
+        padding-top: 2rem;
     }}
 
     /* INFO SECTIONS */
@@ -371,7 +378,7 @@ st.markdown(
         font-weight: bold;
     }}
 
-    /* Enhanced feature cards with icons */
+    /* Enhanced feature cards */
     .feature-card {{
         background: linear-gradient(135deg, {MID_BG}dd 0%, {DEEP_BG}dd 100%);
         border: 2px solid {PRIMARY_GREEN}22;
@@ -461,7 +468,7 @@ st.markdown(
     /* Assistant Label Badge */
     [data-testid="stChatMessage"][data-testid*="assistant"]::before,
     .stChatMessage[class*="assistant"]::before {{
-        content: 'STORM ASSISTANT';
+        content: 'STORM';
         position: absolute;
         top: -12px;
         left: 30px;
@@ -534,20 +541,6 @@ st.markdown(
         filter: brightness(1.1);
     }}
 
-    /* EXPANDABLE SECTIONS */
-    .stExpander {{
-        background: {MID_BG} !important;
-        border: 1px solid {PRIMARY_GREEN}22 !important;
-        border-radius: 20px !important;
-        margin: 1rem 0 !important;
-    }}
-
-    .stExpander summary {{
-        color: {PRIMARY_GREEN} !important;
-        font-weight: 700 !important;
-        padding: 1rem !important;
-    }}
-
     /* SCROLLBAR CUSTOMIZATION */
     ::-webkit-scrollbar {{ 
         width: 10px; 
@@ -581,21 +574,6 @@ st.markdown(
 
     .stChatMessage {{
         animation: entryFade 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-    }}
-
-    @keyframes pulse {{
-        0%, 100% {{ opacity: 1; }}
-        50% {{ opacity: 0.6; }}
-    }}
-
-    .pulse-animation {{
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }}
-
-    /* HIDE EXCEPTION MESSAGES */
-    .element-container:has(.stException),
-    [data-testid="stException"] {{
-        display: none !important;
     }}
 
     /* TEXT AND MARKDOWN STYLING */
@@ -645,10 +623,6 @@ st.markdown(
 # 5. UTILITY FUNCTIONS
 # ======================================================
 
-def export_conversation_json() -> str:
-    """Export conversation history as JSON string."""
-    return json.dumps(st.session_state.messages, indent=2)
-
 def count_message_stats() -> Dict[str, int]:
     """Calculate message statistics."""
     total = len(st.session_state.messages)
@@ -659,13 +633,6 @@ def count_message_stats() -> Dict[str, int]:
         "user": user_msgs,
         "assistant": assistant_msgs
     }
-
-def get_conversation_summary() -> str:
-    """Generate a summary of the conversation."""
-    stats = count_message_stats()
-    if stats["total"] <= 1:
-        return "No conversation yet. Start by asking a question!"
-    return f"**Conversation active:** {stats['user']} questions asked, {stats['assistant']} responses provided."
 
 # ======================================================
 # 6. UI COMPONENT RENDERING
@@ -680,7 +647,7 @@ def render_storm_header():
             </div>
             <h1 class="main-title">STORM</h1>
             <p class="sub-title">Wolves of Real Estate • AI Assistant</p>
-            <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="margin-top: 2rem; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;">
                 <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">TAX DEEDS</span>
                 <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">TAX LIENS</span>
                 <span style="background: {PRIMARY_GREEN}15; color: {PRIMARY_GREEN}; padding: 6px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid {PRIMARY_GREEN}33;">WHOLESALE</span>
@@ -718,7 +685,7 @@ def render_expertise_section():
                 <img src="{CHATBOT_ICON_DATA}" alt="Storm" class="chatbot-icon-small">
                 <h3 style="margin: 0;">Storm's Expertise</h3>
             </div>
-            <p>Storm is your specialized AI assistant for real estate investment strategies that serious operators use to dominate the market. Here's what Storm can help you with:</p>
+            <p>Storm is your specialized AI assistant for real estate investment strategies. Here's what Storm can help you with:</p>
             <ul>
                 <li><strong>Tax Deed Analysis:</strong> Evaluate auction properties, calculate equity positions, assess risks, and determine bidding strategies</li>
                 <li><strong>Tax Lien Investing:</strong> Analyze interest rates, redemption periods, lien priorities, and portfolio diversification strategies</li>
@@ -767,7 +734,27 @@ def render_feature_cards():
         {
             "icon": "🔍",
             "title": "Due Diligence Command Center",
-            "description": "Never get burned by a bad deal. Comprehensive property research frameworks, title examination checklists, lien priority analysis, and risk assessment tools to protect your investments."
+            "description": "Never get burned by a bad deal. Property research frameworks, title examination checklists, lien priority analysis, and risk assessment tools to protect your investments."
+        },
+        {
+            "icon": "💼",
+            "title": "Portfolio Strategy Builder",
+            "description": "Scale your real estate empire systematically. Get guidance on portfolio allocation, risk management, capital deployment, market timing, and long-term wealth building strategies."
+        },
+        {
+            "icon": "📈",
+            "title": "Financial Modeling Expert",
+            "description": "Make data-driven investment decisions. Advanced ROI calculations, cash flow projections, sensitivity analysis, and scenario planning to maximize your returns and minimize risks."
+        },
+        {
+            "icon": "🏆",
+            "title": "Competitive Advantage Analysis",
+            "description": "Outmaneuver other investors. Learn how to spot opportunities others miss, negotiate better deals, move faster, and build systems that give you an unfair advantage in any market."
+        },
+        {
+            "icon": "🎓",
+            "title": "Education & Training Hub",
+            "description": "Continuously improve your skills. Access real-world case studies, best practices from top investors, common pitfalls to avoid, and strategies that work in any economic climate."
         }
     ]
     
@@ -785,162 +772,99 @@ def render_feature_cards():
             unsafe_allow_html=True
         )
 
-def render_quick_examples():
-    """Render quick example prompts section."""
+def render_example_prompts_tab():
+    """Render example prompts in a grid layout."""
     st.markdown(
         f"""
-        <div class="info-section">
-            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
                 <img src="{CHATBOT_ICON_DATA}" alt="Storm" class="chatbot-icon-small">
-                <h3 style="margin: 0;">Quick Start Examples</h3>
+                <h2 style="color: {PRIMARY_GREEN}; font-size: 2rem; font-weight: 800; margin: 0;">Example Questions</h2>
             </div>
-            <p>Not sure where to begin? Try asking Storm about these common scenarios:</p>
+            <p style="color: rgba(255,255,255,0.7);">Click any example to instantly start a conversation with Storm</p>
         </div>
         """,
         unsafe_allow_html=True
     )
+    
+    examples = [
+        {
+            "icon": "📊",
+            "title": "Tax Deed ROI Analysis",
+            "query": "I'm looking at a tax deed property with a $50k opening bid. The estimated market value is $120k. It needs about $25k in repairs. Can you help me analyze if this is a good deal and calculate my potential ROI?"
+        },
+        {
+            "icon": "🏦",
+            "title": "Seller Financing Structure",
+            "query": "I want to buy a property worth $200k but the seller wants all cash. How can I structure a creative financing deal with seller financing where I put minimal money down?"
+        },
+        {
+            "icon": "📈",
+            "title": "Wholesale Spread Calculator",
+            "query": "I found a distressed property. The seller wants $80k, ARV is $150k, and repairs are estimated at $35k. What should my wholesale assignment fee be?"
+        },
+        {
+            "icon": "💰",
+            "title": "Tax Lien Investment Guide",
+            "query": "I'm new to tax lien investing. Can you explain how tax liens work and what factors I should consider when choosing which liens to buy?"
+        },
+        {
+            "icon": "🎯",
+            "title": "Auction Bidding Strategy",
+            "query": "I'm going to my first tax deed auction next week. What bidding strategies should I use, and how do I determine my maximum bid?"
+        },
+        {
+            "icon": "🔍",
+            "title": "Due Diligence Checklist",
+            "query": "What due diligence should I perform before buying a tax deed property at auction?"
+        },
+        {
+            "icon": "🏆",
+            "title": "First Auction Preparation",
+            "query": "I'm attending my first county tax deed auction. What's the best strategy for identifying which properties to bid on and how to determine my maximum bid?"
+        },
+        {
+            "icon": "💼",
+            "title": "Subject-To Deal Structure",
+            "query": "I found a motivated seller with $150k remaining on their mortgage. The property is worth $220k. How do I structure a subject-to deal and what are the risks I need to be aware of?"
+        },
+        {
+            "icon": "📉",
+            "title": "Distressed Property Analysis",
+            "query": "I found a property that's been vacant for 2 years with $45k in back taxes. The owner wants to walk away. How should I approach this deal?"
+        },
+        {
+            "icon": "🎓",
+            "title": "Portfolio Scaling Strategy",
+            "query": "I've successfully flipped 3 properties. How do I scale to 10+ deals per year while managing risk and maintaining quality?"
+        },
+        {
+            "icon": "🏛️",
+            "title": "Lien Priority Assessment",
+            "query": "I'm looking at a tax deed with multiple liens attached. How do I determine which liens survive the sale and calculate my true acquisition cost?"
+        },
+        {
+            "icon": "💡",
+            "title": "Creative Exit Strategies",
+            "query": "I bought a tax deed property but the market has softened. What are alternative exit strategies beyond a traditional sale?"
+        }
+    ]
     
     col1, col2 = st.columns(2)
     
-    with col1:
-        if st.button("📊 Analyze Tax Deed ROI", key="example1"):
-            st.session_state.example_query = "I'm looking at a tax deed property with a $50k opening bid. The estimated market value is $120k. It needs about $25k in repairs. Can you help me analyze if this is a good deal and calculate my potential ROI?"
-        
-        if st.button("🏦 Structure Seller Financing", key="example2"):
-            st.session_state.example_query = "I want to buy a property worth $200k but the seller wants all cash. How can I structure a creative financing deal with seller financing where I put minimal money down?"
-        
-        if st.button("📈 Calculate Wholesale Spread", key="example3"):
-            st.session_state.example_query = "I found a distressed property. The seller wants $80k, ARV is $150k, and repairs are estimated at $35k. What should my wholesale assignment fee be?"
-    
-        if st.button("🎯 County Auction Strategy", key="example7"):
-            st.session_state.example_query = "I'm attending my first county tax deed auction. What's the best strategy for identifying which properties to bid on and how to determine my maximum bid?"
-    
-    with col2:
-        if st.button("💰 Tax Lien Strategy", key="example4"):
-            st.session_state.example_query = "I'm new to tax lien investing. Can you explain how tax liens work and what factors I should consider when choosing which liens to buy?"
-        
-        if st.button("🎯 Auction Bidding Strategy", key="example5"):
-            st.session_state.example_query = "I'm going to my first tax deed auction next week. What bidding strategies should I use, and how do I determine my maximum bid?"
-        
-        if st.button("🔍 Due Diligence Checklist", key="example6"):
-            st.session_state.example_query = "What due diligence should I perform before buying a tax deed property at auction?"
-
-        if st.button("💼 Subject-To Deal Structure", key="example8"):
-            st.session_state.example_query = "I found a motivated seller with $150k remaining on their mortgage. The property is worth $220k. How do I structure a subject-to deal and what are the risks I need to be aware of?"
-
-def render_stats_dashboard():
-    """Render conversation statistics dashboard."""
-    stats = count_message_stats()
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(
-            f"""
-            <div class="stat-card">
-                <div class="stat-number">{stats['total']}</div>
-                <div class="stat-label">Total Messages</div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    with col2:
-        st.markdown(
-            f"""
-            <div class="stat-card">
-                <div class="stat-number">{stats['user']}</div>
-                <div class="stat-label">Questions Asked</div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    with col3:
-        st.markdown(
-            f"""
-            <div class="stat-card">
-                <div class="stat-number">{stats['assistant']}</div>
-                <div class="stat-label">Storm Responses</div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-def render_advanced_features():
-    """Render advanced features section."""
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    with st.expander("⚙️ ADVANCED FEATURES & SETTINGS", expanded=False):
-        st.markdown(f"<p style='color: {PRIMARY_GREEN}; font-weight: 600; margin-bottom: 1rem;'>Conversation Management</p>", unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if st.button("📥 Export Conversation", key="export_btn", use_container_width=True):
-                conversation_json = export_conversation_json()
-                st.download_button(
-                    label="⬇️ Download JSON",
-                    data=conversation_json,
-                    file_name=f"storm_conversation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
-                    mime="application/json",
-                    key="download_json"
-                )
-                st.success("✅ Conversation ready for download!")
-        
-        with col2:
-            if st.button("📋 Copy Last Response", key="copy_btn", use_container_width=True):
-                if st.session_state.messages:
-                    last_assistant_msg = [msg for msg in reversed(st.session_state.messages) if msg["role"] == "assistant"]
-                    if last_assistant_msg:
-                        st.code(last_assistant_msg[0]["content"], language=None)
-                        st.info("💡 Select and copy the text above")
-                else:
-                    st.warning("No messages to copy yet")
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: {PRIMARY_GREEN}; font-weight: 600; margin-bottom: 1rem;'>Conversation Summary</p>", unsafe_allow_html=True)
-        summary = get_conversation_summary()
-        st.markdown(summary)
-        
-        stats = count_message_stats()
-        if stats["total"] > 1:
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown(f"<p style='color: rgba(255,255,255,0.7); font-size: 0.85rem;'>Session started: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}</p>", unsafe_allow_html=True)
-
-def render_storm_footer():
-    """Render footer with chatbot icon."""
-    st.markdown(
-        f"""
-        <div style="margin-top: 5rem; padding: 4rem 1rem; text-align: center; border-top: 2px solid {PRIMARY_GREEN}11;">
-            <div style="margin-bottom: 2rem;">
-                <img src="{CHATBOT_ICON_DATA}" alt="Storm Chatbot" class="chatbot-icon">
-            </div>
-            <div style="color: {PRIMARY_GREEN}; font-weight: 900; letter-spacing: 0.3em; margin-bottom: 0.75rem; font-size: 1.2rem;">WOLVES OF REAL ESTATE</div>
-            <div style="color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1.5rem;">© 2025 Built for Serious Operators</div>
-            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                <span style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">🔒 Secure Connection</span>
-                <span style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">⚡ Real-Time AI</span>
-                <span style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">🐺 Pack Powered</span>
-            </div>
-            <div style="margin-top: 2rem; color: rgba(255,255,255,0.5); font-size: 0.75rem;">
-                Powered by Storm AI Engine • Advanced Natural Language Processing
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    for idx, example in enumerate(examples):
+        with col1 if idx % 2 == 0 else col2:
+            if st.button(f"{example['icon']} {example['title']}", key=f"example_{idx}", use_container_width=True):
+                st.session_state.example_query = example['query']
+                st.rerun()
 
 # ======================================================
 # 7. MAIN APPLICATION ENGINE
 # ======================================================
 
 render_storm_header()
-
 render_greeting_section()
 
-# Session State Management
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -953,141 +877,139 @@ if "messages" not in st.session_state:
         }
     ]
 
-if "show_stats" not in st.session_state:
-    st.session_state.show_stats = False
-
 if "example_query" not in st.session_state:
     st.session_state.example_query = None
 
-# Render Expertise and Examples sections
-render_expertise_section()
+tab1, tab2, tab3 = st.tabs(["💬 Chat with Storm", "📚 Features & Capabilities", "💡 Example Questions"])
 
+with tab1:
+    st.markdown(
+        f"""
+        <div style="margin: 2rem 0;">
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+                <img src="{CHATBOT_ICON_DATA}" alt="Storm" class="chatbot-icon-small">
+                <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; letter-spacing: 0.1em; margin: 0;">CONVERSATION</h3>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Display chat history
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+    
+    # Handle example query injection
+    if st.session_state.example_query:
+        user_input = st.session_state.example_query
+        st.session_state.example_query = None
+    else:
+        user_input = st.chat_input("Ask about auctions, liens, wholesale spreads, creative finance, ROI calculations, or market analysis…")
+    
+    # User Interaction & Webhook Logic
+    if user_input:
+        # Add user message to state
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
+    
+        # Assistant Response
+        with st.chat_message("assistant"):
+            status_placeholder = st.empty()
+            status_placeholder.markdown("🐺 *Storm is analyzing your query and preparing a detailed response...*")
+            
+            # Prepare Payload for N8N
+            payload = {
+                "assistant": "Storm",
+                "community": "Wolves of Real Estate",
+                "message": user_input,
+                "history": st.session_state.messages[-10:],
+                "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "session_stats": count_message_stats()
+            }
+            
+            try:
+                # Execute Webhook Call
+                response = requests.post(
+                    N8N_WEBHOOK_URL, 
+                    json=payload, 
+                    timeout=90
+                )
+                
+                if response.status_code == 200 and response.text:
+                    final_reply = response.text.strip()
+                elif response.status_code == 200:
+                    final_reply = "⚠️ Storm received your question but encountered a processing issue. Please try rephrasing your query."
+                else:
+                    final_reply = f"⚠️ Storm encountered an issue (Status: {response.status_code}). Let's try that again."
+                    
+            except requests.exceptions.Timeout:
+                final_reply = "⚠️ **Request timed out.** Storm is taking longer than expected. Please try again or simplify your question."
+            except requests.exceptions.ConnectionError:
+                final_reply = "⚠️ **Connection error:** Unable to reach Storm's server. Please check your internet connection and try again."
+            except requests.exceptions.RequestException as e:
+                final_reply = f"⚠️ **Network error:** {str(e)[:100]}. Please try again in a moment."
+            
+            # Update UI with response
+            status_placeholder.markdown(final_reply)
+            st.session_state.messages.append({"role": "assistant", "content": final_reply})
+    
+    # Control buttons
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("🔄 Reset Conversation", key="reset_chat", use_container_width=True):
+            st.session_state.messages = [
+                {
+                    "role": "assistant", 
+                    "content": "🐺 **Conversation Reset**\n\nReady to analyze your next deal. What are we working on?"
+                }
+            ]
+            st.rerun()
+    
+    with col2:
+        if st.button("🚀 New Session", key="new_session", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+
+with tab2:
+    render_expertise_section()
+    
+    st.markdown(
+        f"""
+        <div style="text-align: center; margin: 3rem 0 2rem 0;">
+            <h2 style="color: {PRIMARY_GREEN}; font-size: 2rem; font-weight: 800; letter-spacing: 0.05em;">CAPABILITIES</h2>
+            <p style="color: rgba(255,255,255,0.7); margin-top: 1rem;">Everything you need to succeed in alternative real estate investing</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    render_feature_cards()
+
+with tab3:
+    render_example_prompts_tab()
+
+# Footer
 st.markdown(
     f"""
-    <div style="text-align: center; margin: 3rem 0 2rem 0;">
-        <h2 style="color: {PRIMARY_GREEN}; font-size: 2rem; font-weight: 800; letter-spacing: 0.05em;">COMPREHENSIVE CAPABILITIES</h2>
-        <p style="color: rgba(255,255,255,0.7); margin-top: 1rem;">Everything you need to succeed in alternative real estate investing</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-render_feature_cards()
-
-render_quick_examples()
-
-# Statistics Dashboard Toggle
-st.markdown("<br>", unsafe_allow_html=True)
-if st.button("📊 SHOW CONVERSATION STATS", key="toggle_stats"):
-    st.session_state.show_stats = not st.session_state.show_stats
-
-if st.session_state.show_stats:
-    render_stats_dashboard()
-
-# Display Chat History
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown(
-    f"""
-    <div style="border-top: 2px solid {PRIMARY_GREEN}22; padding-top: 2rem; margin-top: 2rem;">
-        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
-            <img src="{CHATBOT_ICON_DATA}" alt="Storm" class="chatbot-icon-small">
-            <h3 style="color: {PRIMARY_GREEN}; font-weight: 800; letter-spacing: 0.1em; margin: 0;">CONVERSATION</h3>
+    <div style="margin-top: 5rem; padding: 4rem 1rem; text-align: center; border-top: 2px solid {PRIMARY_GREEN}11;">
+        <div style="margin-bottom: 2rem;">
+            <img src="{CHATBOT_ICON_DATA}" alt="Storm Chatbot" class="chatbot-icon">
+        </div>
+        <div style="color: {PRIMARY_GREEN}; font-weight: 900; letter-spacing: 0.3em; margin-bottom: 0.75rem; font-size: 1.2rem;">WOLVES OF REAL ESTATE</div>
+        <div style="color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1.5rem;">© 2025 Built for Serious Operators</div>
+        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
+            <span style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">🔒 Secure Connection</span>
+            <span style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">⚡ Real-Time AI</span>
+            <span style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">🐺 Pack Powered</span>
+        </div>
+        <div style="margin-top: 2rem; color: rgba(255,255,255,0.5); font-size: 0.75rem;">
+            Powered by Storm AI Engine • Advanced Natural Language Processing
         </div>
     </div>
     """,
     unsafe_allow_html=True
 )
-
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-
-# Handle example query injection
-if st.session_state.example_query:
-    user_input = st.session_state.example_query
-    st.session_state.example_query = None
-else:
-    user_input = st.chat_input("Ask about auctions, liens, wholesale spreads, creative finance, ROI calculations, or market analysis…")
-
-# User Interaction & Webhook Logic
-if user_input:
-    # Add user message to state
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
-
-    # Professional Assistant Response
-    with st.chat_message("assistant"):
-        status_placeholder = st.empty()
-        status_placeholder.markdown("🐺 *Storm is analyzing your query and preparing a detailed response...*")
-        
-        # Prepare Payload for N8N
-        payload = {
-            "assistant": "Storm",
-            "community": "Wolves of Real Estate",
-            "message": user_input,
-            "history": st.session_state.messages[-10:],
-            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "session_stats": count_message_stats()
-        }
-        
-        try:
-            # Execute Webhook Call with proper timeout
-            response = requests.post(
-                N8N_WEBHOOK_URL, 
-                json=payload, 
-                timeout=90
-            )
-            
-            if response.status_code == 200 and response.text:
-                final_reply = response.text.strip()
-            elif response.status_code == 200:
-                final_reply = "⚠️ Storm received your question but encountered a processing issue. Please try rephrasing your query."
-            else:
-                final_reply = f"⚠️ Storm encountered an issue (Status: {response.status_code}). Let's try that again."
-                
-        except requests.exceptions.Timeout:
-            final_reply = "⚠️ **Request timed out.** Storm is taking longer than expected—likely processing a complex query. Please try again or simplify your question."
-        except requests.exceptions.ConnectionError:
-            final_reply = "⚠️ **Connection error:** Unable to reach Storm's server. Please check your internet connection and try again."
-        except requests.exceptions.RequestException as e:
-            final_reply = f"⚠️ **Network error:** {str(e)[:100]}. Please try again in a moment."
-        
-        # Update UI with response
-        status_placeholder.markdown(final_reply)
-        st.session_state.messages.append({"role": "assistant", "content": final_reply})
-
-# Advanced Features
-render_advanced_features()
-
-# Reset & Control Buttons Section
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown(
-    f"""
-    <div style="border-top: 2px solid {PRIMARY_GREEN}11; padding-top: 2rem; margin-top: 3rem;">
-        <h3 style="color: {PRIMARY_GREEN}; text-align: center; font-weight: 800; letter-spacing: 0.1em; margin-bottom: 1.5rem;">🎛️ CONTROLS</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("🔄 RESET CONVERSATION", key="reset_main", use_container_width=True):
-        st.session_state.messages = [
-            {
-                "role": "assistant", 
-                "content": "🐺 **Conversation Reset**\n\nReady to analyze your next deal. What are we working on?"
-            }
-        ]
-        st.session_state.show_stats = False
-        st.rerun()
-
-with col2:
-    if st.button("🚀 NEW SESSION", key="new_session", use_container_width=True):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
-
-render_storm_footer()
